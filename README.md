@@ -1,1 +1,1 @@
-# word-embedding-fcp
+# opensub2vec
