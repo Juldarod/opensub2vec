@@ -2,12 +2,16 @@ import re
 
 lines = 0
 
-input_path = '/home/julda/Documents/OpenSubtitles2018.en'
-output_path = '/home/julda/Documents/opensub2018.cor'
+# input_path = '/home/julda/Documents/OpenSubtitles2018.en'
+w_input_path = 'D:\OpenSubtitles2018.en\OpenSubtitles2018.en'
+# output_path = '/home/julda/Documents/opensub2018.cor'
+w_output_path = 'D:\OpenSubtitles2018.en\opensub2018.cor'
 # output1 = open('/home/julda/Documents/example.cor', 'w+')
 
-input = open(input_path, 'r')
-output = open(output_path, 'w+')
+# input = open(input_path, 'r')
+# output = open(output_path, 'w+')
+input = open(w_input_path, 'r')
+output = open(w_output_path, 'w+')
 # input.readlines()
 
 for line in input:

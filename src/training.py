@@ -15,5 +15,6 @@ from gensim.models import Word2Vec
 # print(str(file))
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-model = Word2Vec(corpus_file=get_tmpfile('/home/julda/Documents/opensub2018.cor'), workers=4)
+# model = Word2Vec(corpus_file=get_tmpfile('/home/julda/Documents/opensub2018.cor'), workers=4)
+model = Word2Vec(corpus_file=get_tmpfile('D:\OpenSubtitles2018.en\opensub2018.cor'), workers=4)
 model.save('opensub2018.model')
