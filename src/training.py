@@ -1,20 +1,15 @@
-from pathlib import Path
-import logging
-from gensim.models.word2vec import LineSentence
-from gensim.utils import save_as_line_sentence
 from gensim.test.utils import get_tmpfile
 from gensim.models import Word2Vec
+from multiprocessing import cpu_count
+from pathlib import Path
+import logging
 
-# corpus = open('/home/julda/Documents/opensub2018.cor', 'r')
-# corpus_fname = get_tmpfile('/home/julda/Documents/opensub2018-line.cor')
-# save_as_line_sentence(corpus, corpus_fname)
-# corpus.close()
-# sentences = LineSentence(corpus)
-
-# path = get_tmpfile('opensub2018.model')
-# print(str(file))
+num_cores = cpu_count()
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-# model = Word2Vec(corpus_file=get_tmpfile('/home/julda/Documents/opensub2018.cor'), workers=4)
-model = Word2Vec(corpus_file=get_tmpfile('D:\OpenSubtitles2018.en\opensub2018.cor'), workers=4)
-model.save('opensub2018.model')
+model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/opensub2018.en.cor').absolute()), workers=cpu_count())
+model.save('../resources/models/opensub2018.en.model')
+
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/opensub2018.sp.cor').absolute()), workers=cpu_count())
+model.save('../resources/models/opensub2018.sp.model')

@@ -1,33 +1,31 @@
+from pathlib import Path
 import re
 
-lines = 0
+en_lines = 0
+en_input = open(Path('../resources/rawcorpus/OpenSubtitles.en-es.en').absolute(), 'r', encoding="utf8")
+en_output = open(Path('../resources/corpus/opensub2018.en.cor').absolute(), 'w+', encoding="utf8")
+sp_lines = 0
+sp_input = open(Path('../resources/rawcorpus/OpenSubtitles.en-es.sp').absolute(), 'r', encoding="utf8")
+sp_output = open(Path('../resources/corpus/opensub2018.sp.cor').absolute(), 'w+', encoding="utf8")
 
-# input_path = '/home/julda/Documents/OpenSubtitles2018.en'
-w_input_path = 'D:\OpenSubtitles2018.en\OpenSubtitles2018.en'
-# output_path = '/home/julda/Documents/opensub2018.cor'
-w_output_path = 'D:\OpenSubtitles2018.en\opensub2018.cor'
-# output1 = open('/home/julda/Documents/example.cor', 'w+')
-
-# input = open(input_path, 'r')
-# output = open(output_path, 'w+')
-input = open(w_input_path, 'r')
-output = open(w_output_path, 'w+')
-# input.readlines()
-
-for line in input:
-    lines += 1
+for line in en_input:
+    en_lines += 1
     dash = re.sub(r'- ', '', line).lower()
-    noise = re.sub(r'[^a-zA-Z\'áéíóúÁÉÍÓÚ]+', ' ', dash).lower()
-    output.write(re.sub(r' \'', '\'', noise))
-    output.write('\n')
+    apost = re.sub(r' \'', '\'', dash)
+    punct = re.sub(r'[^a-zA-Z\'áéíóúÁÉÍÓÚ]+', ' ', apost)
+    en_output.write(punct)
+    en_output.write('\n')
 
-# for i in range(50):
-#     lines += 1
-#     dash = re.sub(r'- ', '', input.readline()).lower()
-#     noise = re.sub(r'[^a-zA-Z\'áéíóúÁÉÍÓÚ]+', ' ', dash).lower()
-#     output1.write(re.sub(r' \'', '\'', noise))
-#     output1.write('\n')
+en_output.close()
+print('%s english lines processed' % en_lines)
 
-output.close()
-print('%s lines processed' % lines)
-# output1.close()
+for line in sp_input:
+    sp_lines += 1
+    dash = re.sub(r'- ', '', line).lower()
+    symbol = re.sub(r'^\W|\W$', '', dash)
+    punct = re.sub(r'[^a-z\'ñáéíóúÁÉÍÓÚ]+', ' ', symbol)
+    sp_output.write(punct)
+    sp_output.write('\n')
+
+sp_output.close()
+print('%s spanish lines processed' % sp_lines)
