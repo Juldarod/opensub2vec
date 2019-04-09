@@ -107,13 +107,6 @@ venv.bak/
 .vscode
 
 # corpus large files
-resources/corpus/opensub2018.en.cor
-resources/corpus/opensub2018.sp.cor
-resources/rawcorpus/OpenSubtitles.en-es.en
-resources/rawcorpus/OpenSubtitles.en-es.sp
-resources/models/opensub2018.en.model
-resources/models/opensub2018.en.model.trainables.syn1neg.npy
-resources/models/opensub2018.en.model.wv.vectors.npy
-resources/models/opensub2018.sp.model
-resources/models/opensub2018.sp.model.trainables.syn1neg.npy
-resources/models/opensub2018.sp.model.wv.vectors.npy
+resources/corpus/opensub2018*
+resources/models/opensub2018*
+resources/rawcorpus/OpenSubtitles*
