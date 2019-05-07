@@ -107,6 +107,6 @@ venv.bak/
 .vscode
 
 # corpus large files
-resources/corpus/opensub2018*
-resources/models/opensub2018*
-resources/rawcorpus/OpenSubtitles*
+opensub2vec/resources/corpus/opensub2018*
+opensub2vec/resources/models/opensub2018*
+opensub2vec/resources/rawcorpus/OpenSubtitles*
