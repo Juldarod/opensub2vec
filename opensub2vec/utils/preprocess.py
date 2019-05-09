@@ -7,8 +7,8 @@ def english_process():
     start = time.time()
 
     en_lines = 0
-    en_input = open(Path('./resources/rawcorpus/OpenSubtitles.en-es.en').absolute(), 'r', encoding="utf8")
-    en_output = open(Path('./resources/corpus/opensub2018.en.cor').absolute(), 'w+', encoding="utf8")
+    en_input = open(Path('./resources/rawcorpus/aligned/OpenSubtitles.en').absolute(), 'r', encoding="utf8")
+    en_output = open(Path('./resources/corpus/opensub2018_en.cor').absolute(), 'w+', encoding="utf8")
 
     for line in en_input:
         en_lines += 1
@@ -23,16 +23,15 @@ def english_process():
     end = time.time()
     elapsed = end - start
 
-    print('Time elapsed: %f' % elapsed)
     print('%s english lines processed' % en_lines)
-    
+    print('Time elapsed: %f' % elapsed)
 
 def spanish_process():
     start = time.time()
 
     sp_lines = 0
-    sp_input = open(Path('./resources/rawcorpus/OpenSubtitles.en-es.sp').absolute(), 'r', encoding="utf8")
-    sp_output = open(Path('./resources/corpus/opensub2018.sp.cor').absolute(), 'w+', encoding="utf8")
+    sp_input = open(Path('./resources/rawcorpus/aligned/OpenSubtitles.es').absolute(), 'r', encoding="utf8")
+    sp_output = open(Path('./resources/corpus/opensub2018_es.cor').absolute(), 'w+', encoding="utf8")
 
     for line in sp_input:
         sp_lines += 1
@@ -47,5 +46,5 @@ def spanish_process():
     end = time.time()
     elapsed = end - start
 
-    print('Time elapsed: %f' % elapsed)
     print('%s spanish lines processed' % sp_lines)
+    print('Time elapsed: %f' % elapsed)
