@@ -11,16 +11,16 @@ root_path = "../resources/models/word2vec/opensub2018_"
 start = time.time()
 
 # Models loading
-# sg_en_model = Word2Vec.load(root_path + "en_sg.bin", mmap='r')
-# cbow_en_model = Word2Vec.load(root_path + "en_cbow.bin", mmap='r')
-# sg_es_model = Word2Vec.load(root_path + "es_sg.bin", mmap='r')
-# cbow_es_model = Word2Vec.load(root_path + "es_cbow.bin", mmap='r')
+sg_en_model = Word2Vec.load(root_path + "en_sg.bin", mmap='r')
+cbow_en_model = Word2Vec.load(root_path + "en_cbow.bin", mmap='r')
+sg_es_model = Word2Vec.load(root_path + "es_sg.bin", mmap='r')
+cbow_es_model = Word2Vec.load(root_path + "es_cbow.bin", mmap='r')
 
 # Vectors loading (wv)
-sg_en_vectors = Word2VecKeyedVectors.load(root_path + "en_sg.kv")
-sg_es_vectors = Word2VecKeyedVectors.load(root_path + "es_sg.kv")
-cbow_en_vectors = Word2VecKeyedVectors.load(root_path + "en_cbow.kv")
-cbow_es_vectors = Word2VecKeyedVectors.load(root_path + "es_cbow.kv")
+sg_en_vectors = Word2VecKeyedVectors.load(root_path + "en_sg.kv", mmap='r')
+sg_es_vectors = Word2VecKeyedVectors.load(root_path + "es_sg.kv", mmap='r')
+cbow_en_vectors = Word2VecKeyedVectors.load(root_path + "en_cbow.kv", mmap='r')
+cbow_es_vectors = Word2VecKeyedVectors.load(root_path + "es_cbow.kv", mmap='r')
 
 # Get vocabulary
 # vocab = sg_en_vectors.vocab
@@ -37,12 +37,12 @@ print('Models loaded in: %f seconds' % elapsed)
 # https://radimrehurek.com/gensim/models/keyedvectors.html#gensim.models.keyedvectors.Word2VecKeyedVectors.similarity
 
 # English
-print(sg_en_vectors.similarity('woman', 'man'))
-print(cbow_en_vectors.similarity('woman', 'man'))
+# print(sg_en_vectors.similarity('woman', 'man'))
+# print(cbow_en_vectors.similarity('woman', 'man'))
 
-# Spanish
-print(sg_es_vectors.similarity('mujer', 'hombre'))
-print(cbow_es_vectors.similarity('mujer', 'hombre'))
+# # Spanish
+# print(sg_es_vectors.similarity('mujer', 'hombre'))
+# print(cbow_es_vectors.similarity('mujer', 'hombre'))
 
 
 # Testing n_similarity

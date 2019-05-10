@@ -12,15 +12,15 @@ start = time.time()
 
 # Models loading
 dm_en_model = Doc2Vec.load(root_path + "en_dm.bin", mmap='r')
-dbow_en_model = Doc2Vec.load(root_path + "en_dbow.bin", mmap='r')
-dm_sp_model = Doc2Vec.load(root_path + "sp_dm.bin", mmap='r')
-dbow_sp_model = Doc2Vec.load(root_path + "sp_dbow.bin", mmap='r')
+# dbow_en_model = Doc2Vec.load(root_path + "en_dbow.bin", mmap='r')
+dm_es_model = Doc2Vec.load(root_path + "es_dm.bin", mmap='r')
+# dbow_es_model = Doc2Vec.load(root_path + "es_dbow.bin", mmap='r')
 
 # Vectors loading (docvec)
-# dm_en_vectors = Doc2VecKeyedVectors.load(root_path + "en_dm.kv")
-# dm_es_vectors = Doc2VecKeyedVectors.load(root_path + "es_dm.kv")
-# dbow_en_vectors = Doc2VecKeyedVectors.load(root_path + "en_dbow.kv")
-# dbow_es_vectors = Doc2VecKeyedVectors.load(root_path + "es_dbow.kv")
+# dm_en_vectors = Doc2VecKeyedVectors.load(root_path + "en_dm.kv", mmap='r')
+# dm_es_vectors = Doc2VecKeyedVectors.load(root_path + "es_dm.kv", mmap='r')
+# dbow_en_vectors = Doc2VecKeyedVectors.load(root_path + "en_dbow.kv", mmap='r')
+# dbow_es_vectors = Doc2VecKeyedVectors.load(root_path + "es_dbow.kv", mmap='r')
 
 end = time.time()
 elapsed = end - start
@@ -61,3 +61,6 @@ print('Models loaded in: %f seconds' % elapsed)
 # for i, v in enumerate(inferido):
 #     x, y = v
 #     print(i, "Item: ", x, "\nProb: ", str(round(y, 2)) + "%")
+
+print(dm_en_model.docvecs[0])
+print(dm_es_model.docvecs[0])
