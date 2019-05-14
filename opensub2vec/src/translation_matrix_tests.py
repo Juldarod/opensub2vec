@@ -1,4 +1,6 @@
-from gensim.models.doc2vec import Doc2Vec
+from pathlib import Path
+
+from gensim.models.doc2vec import Doc2Vec, TaggedLineDocument
 from gensim.models.translation_matrix import TranslationMatrix, BackMappingTranslationMatrix
 
 import logging
@@ -29,3 +31,6 @@ trans_model = BackMappingTranslationMatrix.load(root_path +
 )
 dbow_en_model = Doc2Vec.load(root_path + "doc2vec/opensub2018_en_dbow.bin", mmap='r')
 print(trans_model.infer_vector(dbow_en_model.docvecs[0]))
+
+
+corpus = TaggedLineDocument(Path('../resources/corpus/english/parts/part000').absolute())
