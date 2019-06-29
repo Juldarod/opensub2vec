@@ -40,7 +40,7 @@ model = BackMappingTranslationMatrix.load("../resources/models/translation_matri
 # data = read_sentiment_docs(datapath("alldata-id-10.txt"))[:5]
 # print(type([TaggedDocument("the red house".split(), ['1'])]))
 test = model.train([TaggedDocument("the red house".split(), ['0']), TaggedDocument("the blue house".split(), ['1'])])
-test = model.train(data)
+# test = model.train(data)
 # test.save('../resources/models/translation_matrix/pruebaentreno.bin')
 
 
