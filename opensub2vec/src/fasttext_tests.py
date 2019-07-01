@@ -4,6 +4,6 @@ from gensim.models.fasttext import FastText
 
 root_path = "../resources/models/fasttext-pretrained/"
 
-en_model = load_facebook_model(root_path + "cc.en.300.bin.gz")
+en_vecs = load_facebook_vectors(root_path + "cc.en.300.bin")
 
-en_model.build_vocab()
+en_vecs.most_similar('dog')

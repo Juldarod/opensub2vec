@@ -2,6 +2,7 @@ from os import listdir
 from pathlib import Path
 
 from gensim.test.utils import get_tmpfile
+from smart_open import open
 from gensim.models.word2vec import Word2Vec
 from gensim.models.doc2vec import Doc2Vec
 from gensim.models.fasttext import FastText
@@ -12,157 +13,98 @@ import logging
 import time
 
 num_cores = cpu_count()
+c_root = '../resources/corpus/'
+m_root = '../resources/models/'
 # print(Path('./resources/corpus/opensub2018_en.cor').absolute())
 
+def train_w2v(lang="en", mode=1):
+    start = time.time()
 
-def train_model(lang, model):
-    if (model == "Word2Vec"):
-        start = time.time()
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-        logging.basicConfig(
-            format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-        # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    mode_str = 'sg' if mode == 1 else 'cbow'
 
-        if(lang == "en"):
-            model = Word2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_en.cor').absolute()), sg=1, workers=cpu_count())
-            model.save('../resources/models/word2vec/opensub2018_en_sg.bin')
-            model = Word2Vec(corpus_file=get_tmpfile(
-                Path('../resources/corpus/opensub2018_en.cor').absolute()), workers=cpu_count())
-            model.save('../resources/models/word2vec/opensub2018_en_cbow.bin')
-        elif(lang == "es"):
-            model = Word2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_es.cor').absolute()), sg=1, workers=cpu_count())
-            model.save('../resources/models/word2vec/opensub2018_es_sg.bin')
-            model = Word2Vec(corpus_file=get_tmpfile(
-                Path('../resources/corpus/opensub2018_es.cor').absolute()), workers=cpu_count())
-            model.save('../resources/models/word2vec/opensub2018_es_cbow.bin')
-        else:
-            print("Language not available")
+    model = Word2Vec(
+        corpus_file=get_tmpfile(
+            Path('{}opensub2018_{}.cor'.format(c_root, lang)).absolute()),
+        sg=mode,
+        workers=cpu_count())
+    model.save('{}word2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))        
+    
+    end = time.time()
+    elapsed = end - start
 
-        end = time.time()
-        elapsed = end - start
+    print('Time elapsed: %f' % elapsed)
 
-        print('Time elapsed: %f' % elapsed)
-    elif(model == "Doc2Vec"):
-        start = time.time()
+def train_d2v(lang="en", mode=1):
+    start = time.time()
 
-        logging.basicConfig(
-            format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-        # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-        if(lang == "en"):
-            model = Doc2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_en.cor').absolute()), epochs=5, vector_size=5, dm=1, workers=cpu_count())
-            model.save('../resources/models/doc2vec/opensub2018_en_dm.bin')
-            model = Doc2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_en.cor').absolute()), epochs=5, vector_size=5, workers=cpu_count())
-            model.save('../resources/models/doc2vec/opensub2018_en_dbow.bin')
-        elif(lang == "es"):
-            model = Doc2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_es.cor').absolute()), epochs=5, vector_size=5, dm=1, workers=cpu_count())
-            model.save('../resources/models/doc2vec/opensub2018_es_dm.bin')
-            model = Doc2Vec(corpus_file=get_tmpfile(Path(
-                '../resources/corpus/opensub2018_es.cor').absolute()), epochs=5, vector_size=5, workers=cpu_count())
-            model.save('../resources/models/doc2vec/opensub2018_es_dbow.bin')
-        else:
-            print("Language not available")
+    mode_str = 'dm' if mode == 1 else 'dbow'
 
-        end = time.time()
-        elapsed = end - start
+    model = Doc2Vec(
+        corpus_file=get_tmpfile(
+            Path('{}opensub2018_{}.cor'.format(c_root,lang)).absolute()), 
+        epochs=5, 
+        vector_size=5, 
+        dm=mode, 
+        workers=cpu_count())
+    model.save('{}doc2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))
 
-        print('Time elapsed: %f' % elapsed)
-    else:
-        print("Model not available")
+    end = time.time()
+    elapsed = end - start
 
+    print('Time elapsed: %f' % elapsed)
 
-# start = time.time()
+    ## Training by parts
 
-logging.basicConfig(
-    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # files = listdir(Path('../resources/corpus/english/parts').absolute())
 
-# model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/english/opensub2018.cor').absolute()), sg=1, workers=cpu_count())
-# model.save('../resources/models/word2vec/english/opensub2018_sg.bin')
-# model.wv.save('../resources/models/word2vec/english/opensub2018_sg.kv')
-# model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/english/opensub2018.cor').absolute()), workers=cpu_count())
-# model.save('../resources/models/word2vec/english/opensub2018_cbow.bin')
-# model.wv.save('../resources/models/word2vec/english/opensub2018_cbow.kv')
-# model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/opensub2018.cor').absolute()), sg=1, workers=cpu_count())
-# model.save('../resources/models/word2vec/spanish/opensub2018_sg.bin')
-# model.wv.save('../resources/models/word2vec/spanish/opensub2018_sg.kv')
-# model = Word2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/opensub2018.cor').absolute()), workers=cpu_count())
-# model.save('../resources/models/word2vec/spanish/opensub2018_cbow.bin')
-# model.wv.save('../resources/models/word2vec/spanish/opensub2018_cbow.kv')
+    # model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10, vector_size=400, negative=5)
 
-# model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10, vector_size=400, negative=5)
-# model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/part000').absolute()))
-# model.train(corpus_file=get_tmpfile(Path('../resources/corpus/english/part000').absolute()), total_words=model.corpus_count, epochs=5)
-# model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/part001').absolute()), update=True)
-# model.train(corpus_file=get_tmpfile(Path('../resources/corpus/english/part001').absolute()), total_words=model.corpus_count, epochs=5)
-# model.save('../resources/models/doc2vec/english/opensub2018_dm.bin')
-# model.wv.save('../resources/models/doc2vec/english/opensub2018_dm.kv')
+    # for f in files:
+    #     if (f[-3:] == "000"):
+    #         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part000').absolute()))
+    #     else:
+    #         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part{}'.format(f[-3:])).absolute()), update=True)
 
-# files = listdir(Path('../resources/corpus/english/parts').absolute())
+    #     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part{}'.format(f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
 
-# model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10, vector_size=400, negative=5)
+    # model.save('../resources/models/doc2vec/english/opensub2018_dm.bin')
+    # model.wv.save('../resources/models/doc2vec/english/opensub2018_dm.kv')
 
-# for f in files:
-#     if (f[-3:] == "000"):
-#         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part000').absolute()))
-#     else:
-#         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part{}'.format(f[-3:])).absolute()), update=True)
+    # files = listdir(Path('../resources/corpus/spanish/parts').absolute())
 
-#     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part{}'.format(f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
+    # model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10, vector_size=400, negative=5)
 
-# model.save('../resources/models/doc2vec/english/opensub2018_dm.bin')
-# model.wv.save('../resources/models/doc2vec/english/opensub2018_dm.kv')
+    # for f in files:
+    #     if (f[-3:] == "000"):
+    #         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part000').absolute()))
+    #     else:
+    #         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part{}'.format(f[-3:])).absolute()), update=True)
 
-# files = listdir(Path('../resources/corpus/spanish/parts').absolute())
+    #     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part{}'.format(f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
 
-# model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10, vector_size=400, negative=5)
+    # model.save('../resources/models/doc2vec/spanish/opensub2018_dm.bin')
+    # model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dm.kv')
 
-# for f in files:
-#     if (f[-3:] == "000"):
-#         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part000').absolute()))
-#     else:
-#         model.build_vocab(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part{}'.format(f[-3:])).absolute()), update=True)
+def train_pt_ft(lang="en"):
+    # model = FastText(corpus_file=(), sg=1, size=300, workers=cpu_count)
 
-#     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part{}'.format(f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
+    en_model = load_facebook_model('{}fasttext-pretrained/cc.en.300.bin'.format(m_root))
+    en_model.build_vocab(
+        corpus_file=
+            Path('{}aligned/opensub2018_{}.cor'.format(c_root, lang)).absolute(), 
+        update=True)
+    en_model.train(
+        corpus_file=
+            Path('{}aligned/opensub2018_{}.cor'.format(c_root, lang)).absolute(), 
+        total_examples=en_model.corpus_count, 
+        epochs=en_model.iter,
+        workers=cpu_count())
+    en_model.save('{}fasttext/cc.{}.300.bin'.format(m_root, lang))
 
-# model.save('../resources/models/doc2vec/spanish/opensub2018_dm.bin')
-# model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dm.kv')
-
-
-# model = Doc2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/english/opensub2018.cor').absolute()), epochs=5, vector_size=4, workers=cpu_count())
-# model.save('../resources/models/doc2vec/english/opensub2018_dbow.bin')
-# model.wv.save('../resources/models/doc2vec/english/opensub2018_dbow.kv')
-# model = Doc2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/opensub2018.cor').absolute()), epochs=5, vector_size=4, dm=1, workers=cpu_count())
-# model.save('../resources/models/doc2vec/spanish/opensub2018_dm.bin')
-# model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dm.kv')
-# model = Doc2Vec(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/opensub2018.cor').absolute()), epochs=5, vector_size=4, workers=cpu_count())
-# model.save('../resources/models/doc2vec/spanish/opensub2018_dbow.bin')
-# model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dbow.kv')
-
-
-# model = FastText(corpus_file=(), sg=1, size=300, workers=cpu_count)
-root_path = "../resources/models/fasttext-pretrained/"
-
-en_model = load_facebook_model(root_path + "cc.en.300.bin", encoding='utf-8')
-
-en_model.build_vocab(corpus_file=get_tmpfile(
-    Path('../resources/corpus/aligned/opensub2018_en.cor').absolute()), update=True)
-en_model.train(corpus_file=get_tmpfile(
-    Path('../resources/corpus/aligned/opensub2018_en.cor').absolute()), total_words=en_model.corpus_count, epochs=en_model.iter, workers=cpu_count())
-
-en_model.save('../resources/models/fasttext/cc.en.300.bin')
-
-es_model = load_facebook_model(root_path + "cc.es.300.bin", encoding='utf-8')
-
-es_model.build_vocab(corpus_file=get_tmpfile(
-    Path('../resources/corpus/aligned/opensub2018_es.cor').absolute()), update=True)
-es_model.train(corpus_file=get_tmpfile(
-    Path('../resources/corpus/aligned/opensub2018_es.cor').absolute()), total_words=es_model.corpus_count, epochs=es_model.iter, workers=cpu_count())
-
-es_model.save('../resources/models/fasttext/cc.es.300.bin')
-
-# FastText.c
+train_pt_ft()
