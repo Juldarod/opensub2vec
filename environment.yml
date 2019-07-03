@@ -2,5 +2,7 @@ name: opensub2vec
 channels:
   - conda-forge
 dependencies:
-  - dill
-  - gensim
+  - gensim=3.7.3
+  - flask
+  - simplejson
+  # - python-annoy

@@ -97,7 +97,12 @@ def train_d2v(lang="en", mode=1):
 
 
 def train_pt_ft(lang="en"):
-    # model = FastText(corpus_file=(), sg=1, size=300, workers=cpu_count)
+    # Load models from facebook's pretrained models and store them into a
+    # new file as a gensim's FastText object
+    # en_vecs = load_facebook_model(root_path + 'cc.en.300.bin')
+    # en_vecs.save('../resources/models/fasttext/cc.en.300.bin')
+    # es_vecs = load_facebook_model(root_path + 'cc.es.300.bin')
+    # es_vecs.save('../resources/models/fasttext/cc.es.300.bin')
 
     en_model = FastText.load(
         '{}fasttext-pretrained/cc.{}.300.bin'.format(m_root, lang))
@@ -108,10 +113,10 @@ def train_pt_ft(lang="en"):
     en_model.train(
         corpus_file=get_tmpfile(Path(
             '{}aligned/opensub2018_{}.cor'.format(c_root, lang)).absolute()),
-        total_words=en_model.corpus_count,
+        total_examples=en_model.corpus_count,
         epochs=en_model.iter,
         workers=num_cores)
-    en_model.save('{}fasttext/cc.{}.300.bin'.format(m_root, lang))
+    en_model.save('{}fasttext/cc.{}.300.test.bin'.format(m_root, lang))
 
 
 train_pt_ft(lang="es")
