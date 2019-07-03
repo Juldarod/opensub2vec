@@ -1,0 +1,6 @@
+name: opensub2vec
+channels:
+  - conda-forge
+dependencies:
+  - dill
+  - gensim
