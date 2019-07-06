@@ -108,3 +108,8 @@ venv.bak/
 
 # corpus large files
 opensub2vec/resources/*
+
+# Javascript
+
+node_modules
+yarn.lock

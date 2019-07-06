@@ -1,13 +1,15 @@
 from os import listdir
 from pathlib import Path
+from smart_open import open
+from multiprocessing import cpu_count
 
 from gensim.test.utils import get_tmpfile
-from smart_open import open
-from gensim.models.word2vec import Word2Vec
+from gensim.models.phrases import Phrases, Phraser
 from gensim.models.doc2vec import Doc2Vec
+from gensim.models.word2vec import Word2Vec
+from gensim.models.word2vec import LineSentence
 from gensim.models.fasttext import FastText
-from gensim.models.fasttext import load_facebook_model, load_facebook_vectors
-from multiprocessing import cpu_count
+# from gensim.models.fasttext import load_facebook_model, load_facebook_vectors
 
 import logging
 import time
@@ -15,7 +17,6 @@ import time
 num_cores = cpu_count()
 c_root = '../resources/corpus/'
 m_root = '../resources/models/'
-# print(Path('./resources/corpus/opensub2018_en.cor').absolute())
 
 
 def train_w2v(lang="en", mode=1):
@@ -40,29 +41,7 @@ def train_w2v(lang="en", mode=1):
     print('Time elapsed: %f' % elapsed)
 
 
-def train_d2v(lang="en", mode=1):
-    start = time.time()
-
-    logging.basicConfig(
-        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
-    mode_str = 'dm' if mode == 1 else 'dbow'
-
-    model = Doc2Vec(
-        corpus_file=get_tmpfile(
-            Path('{}opensub2018_{}.cor'.format(c_root, lang)).absolute()),
-        epochs=5,
-        vector_size=5,
-        dm=mode,
-        workers=cpu_count())
-    model.save('{}doc2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))
-
-    end = time.time()
-    elapsed = end - start
-
-    print('Time elapsed: %f' % elapsed)
-
+def train_d2v_by_parts():
     # Training by parts
 
     # files = listdir(Path('../resources/corpus/english/parts').absolute())
@@ -94,6 +73,87 @@ def train_d2v(lang="en", mode=1):
 
     # model.save('../resources/models/doc2vec/spanish/opensub2018_dm.bin')
     # model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dm.kv')
+    return
+
+
+def train_d2v(lang="en", mode=1):
+    start = time.time()
+
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # logging.basicConfig(filename=logname, filemode='a', format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+    mode_str = 'dm' if mode == 1 else 'dbow'
+
+    model = Doc2Vec(
+        corpus_file=get_tmpfile(
+            Path('{}opensub2018_{}.cor'.format(c_root, lang)).absolute()),
+        epochs=5,
+        vector_size=5,
+        dm=mode,
+        workers=cpu_count())
+    model.save('{}doc2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))
+
+    end = time.time()
+    elapsed = end - start
+
+    print('Time elapsed: %f' % elapsed)
+
+
+def get_sentences(input_file_pointer):
+    while True:
+        line = input_file_pointer.readline()
+        if not line:
+            break
+        yield line
+
+
+def sentence_to_bi_grams(phrases_model, sentence):
+    return ' '.join(phrases_model[sentence])
+
+
+def sentences_to_bi_grams(lang):
+    mode = 'english' if lang == 'en' else 'spanish'
+
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+    n_grams = Phraser.load(
+        '{}phrases/opensub2018_{}.bin'.format(m_root, lang))
+    input_file_name = '{}{}/opensub2018.cor'.format(c_root, mode)
+    output_file_name = '{}{}/opensub2018_phrases.cor'.format(
+        c_root, mode)
+
+    with open(input_file_name, 'r') as input_file_pointer:
+        with open(output_file_name, 'w+') as out_file:
+            for sentence in get_sentences(input_file_pointer):
+                tokenized_sentence = sentence.split(' ')
+                parsed_sentence = sentence_to_bi_grams(
+                    n_grams, tokenized_sentence)
+                out_file.write(parsed_sentence)
+
+
+def build_phrase_model(lang):
+    mode = 'english' if lang == 'en' else 'spanish'
+
+    sentences = LineSentence(Path('{}{}/opensub2018.cor'.format(
+        c_root, mode)))
+
+    phrases = Phrases(sentences=sentences, min_count=1, threshold=1)
+    model_phrases = Phraser(phrases)
+    model_phrases.save(
+        '{}phrases/opensub2018_{}.bin'.format(m_root, lang))
+
+
+def train_ft(lang):
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+    mode = 'english' if lang == 'en' else 'spanish'
+
+    model = FastText(corpus_file=get_tmpfile(Path('{}{}/opensub2018.cor'.format(
+        c_root, mode, lang)).absolute()), sg=1, size=300, workers=num_cores)
+    model.save('{}fasttext/opensub_unigram_{}.bin'.format(m_root, lang))
 
 
 def train_pt_ft(lang="en"):
@@ -119,4 +179,8 @@ def train_pt_ft(lang="en"):
     en_model.save('{}fasttext/cc.{}.300.test.bin'.format(m_root, lang))
 
 
-train_pt_ft(lang="es")
+sentences_to_bi_grams('en')
+sentences_to_bi_grams('es')
+# train_pt_ft(lang="es")
+# train_ft("en")
+# train_ft("es")
