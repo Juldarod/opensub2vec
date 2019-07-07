@@ -113,3 +113,4 @@ opensub2vec/resources/*
 
 node_modules
 yarn.lock
+.prettierrc

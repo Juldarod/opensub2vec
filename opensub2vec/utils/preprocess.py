@@ -1,53 +1,74 @@
 from pathlib import Path
 import re
 import time
+import logging
+
+from gensim.models.phrases import Phraser
+
+rc_root = '../resources/rawcorpus/'
+c_root = '../resources/corpus/'
+m_root = '../resources/models/'
 
 
-def english_process():
+def get_sentences(input_file_pointer):
+    while True:
+        line = input_file_pointer.readline()
+        if not line:
+            break
+        yield line
+
+
+def remove_noise(lang):
     start = time.time()
 
-    en_lines = 0
-    en_input = open(Path('../resources/rawcorpus/english/OpenSubtitles2018.en').absolute(), 'r', encoding="utf8")
-    en_output = open(Path('../resources/corpus/english/opensub2018.cor').absolute(), 'w+', encoding="utf8")
+    lines = 0
+    regex = [r' \'', '\'', r'[^a-z\'áéíóú]+', r'^\W|\W$', r'[^a-z\'ñáéíóú]+']
+    first_regex = regex[0] if lang == 'en' else regex[2]
+    second_regex = regex[1] if lang == 'en' else regex[3]
+    mode = 'english' if lang == 'en' else 'spanish'
 
-    for line in en_input:
-        en_lines += 1
-        dash = re.sub(r'- ', '', line).lower()
-        apost = re.sub(r' \'', '\'', dash)
-        punct = re.sub(r'[^a-zA-Z\'áéíóúÁÉÍÓÚ]+', ' ', apost)
-        en_output.write(punct)
-        en_output.write('\n')
-    
-    en_output.close()
+    file_input = open(Path(
+        '{}{}/OpenSubtitles2018.{}'.format(rc_root, mode, lang)).absolute(), 'r', encoding='utf8')
+    file_output = open(Path(
+        '{}{}/opensub2018.cor'.format(c_root, mode)).absolute(), 'w+', encoding='utf8')
+
+    for line in file_input:
+        lines += 1
+        first_step = re.sub(r'- ', '', line).lower()
+        second_step = re.sub(first_regex, first_step)
+        third_step = re.sub(second_regex, ' ', second_step)
+        file_output.write(third_step)
+        file_output.write('\n')
+
+    file_output.close()
 
     end = time.time()
     elapsed = end - start
 
-    print('%s english lines processed' % en_lines)
-    print('Time elapsed: %f' % elapsed)
+    print('{} english lines processed'.format(lines))
+    print('Time elapsed: {}'.format(elapsed))
 
-def spanish_process():
-    start = time.time()
 
-    sp_lines = 0
-    sp_input = open(Path('../resources/rawcorpus/spanish/OpenSubtitles2018.es').absolute(), 'r', encoding="utf8")
-    sp_output = open(Path('../resources/corpus/spanish/opensub2018.cor').absolute(), 'w+', encoding="utf8")
+def sentence_to_bi_grams(phrases_model, sentence):
+    return ' '.join(phrases_model[sentence])
 
-    for line in sp_input:
-        sp_lines += 1
-        dash = re.sub(r'- ', '', line).lower()
-        symbol = re.sub(r'^\W|\W$', '', dash)
-        punct = re.sub(r'[^a-z\'ñáéíóúÁÉÍÓÚ]+', ' ', symbol)
-        sp_output.write(punct)
-        sp_output.write('\n')
 
-    sp_output.close()
+def sentences_to_bi_grams(lang):
+    mode = 'english' if lang == 'en' else 'spanish'
 
-    end = time.time()
-    elapsed = end - start
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-    print('%s spanish lines processed' % sp_lines)
-    print('Time elapsed: %f' % elapsed)
+    n_grams = Phraser.load(
+        '{}phrases/opensub2018_{}.bin'.format(m_root, lang))
+    input_file_name = '{}{}/opensub2018.cor'.format(c_root, mode)
+    output_file_name = '{}{}/opensub2018_phrases.cor'.format(
+        c_root, mode)
 
-english_process()
-spanish_process()
+    with open(input_file_name, 'r') as input_file_pointer:
+        with open(output_file_name, 'w+') as out_file:
+            for sentence in get_sentences(input_file_pointer):
+                tokenized_sentence = sentence.split(' ')
+                parsed_sentence = sentence_to_bi_grams(
+                    n_grams, tokenized_sentence)
+                out_file.write(parsed_sentence)

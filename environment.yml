@@ -1,10 +1,14 @@
 name: opensub2vec
 channels:
-  - conda-forge
+    - conda-forge
 dependencies:
-  - python=3.6.7
-  - pylint
-  - gensim=3.7.3
-  - flask
-  - simplejson
-  - python-annoy
+    - python=3.6.7
+    - gensim=3.7.3
+    - scikit-learn
+    - matplotlib
+    - python-annoy
+    - pylint
+    - autopep8
+    - flask
+    - simplejson
+    # - gunicorn

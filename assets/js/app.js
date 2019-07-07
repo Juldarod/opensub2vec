@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './home.jsx';
+import Router from './components/Router.jsx';
+import '../styles/app.scss';
 
-ReactDOM.render(<Home />, document.getElementById('app'));
+ReactDOM.render(<Router />, document.getElementById('app'));

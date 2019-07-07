@@ -17,6 +17,7 @@ sg_es_model = Word2Vec.load(w2v_path + "es_sg.bin", mmap='r')
 # dm_es_model = Doc2Vec.load(d2v_path + "es_dm.bin", mmap='r')
 # dbow_es_model = Doc2Vec.load(d2v_path + "es_dbow.bin", mmap='r')
 
+
 def plot_vectors(models, sentences):
     model = models
 
@@ -37,11 +38,11 @@ def plot_vectors(models, sentences):
 
 plot_vectors(
     [
-        sg_en_model, 
+        sg_en_model,
         sg_es_model
-    ], 
+    ],
     [
-        "the black cat", 
+        "the black cat",
         "el gato negro"
     ]
 )
