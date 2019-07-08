@@ -55,16 +55,18 @@ def sentence_to_bi_grams(phrases_model, sentence):
 
 
 def sentences_to_bi_grams(lang):
-    mode = 'english' if lang == 'en' else 'spanish'
+    # mode = 'english' if lang == 'en' else 'spanish'
+    mode = 'aligned'
 
     logging.basicConfig(
         format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     n_grams = Phraser.load(
-        '{}phrases/opensub2018_{}.bin'.format(m_root, lang))
-    input_file_name = '{}{}/opensub2018.cor'.format(c_root, mode)
-    output_file_name = '{}{}/opensub2018_phrases.cor'.format(
-        c_root, mode)
+        '{}phrases/aligned/opensub2018_{}.bin'.format(m_root, lang))
+    input_file_name = '{}{}/opensub2018_{}.cor'.format(
+        c_root, mode, lang)
+    output_file_name = '{}{}/opensub2018_phrases_{}.cor'.format(
+        c_root, mode, lang)
 
     with open(input_file_name, 'r') as input_file_pointer:
         with open(output_file_name, 'w+') as out_file:
@@ -73,3 +75,7 @@ def sentences_to_bi_grams(lang):
                 parsed_sentence = sentence_to_bi_grams(
                     n_grams, tokenized_sentence)
                 out_file.write(parsed_sentence)
+
+
+sentences_to_bi_grams('en')
+sentences_to_bi_grams('es')

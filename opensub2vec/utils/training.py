@@ -36,7 +36,7 @@ def build_phrase_model(lang):
         '{}phrases/{}/opensub2018_{}.bin'.format(m_root, mode, lang))
 
 
-def train_w2v(lang="en", mode=1):
+def train_w2v(lang="en", kind='aligned', mode=1):
     start = time.time()
 
     logging.basicConfig(
@@ -48,10 +48,11 @@ def train_w2v(lang="en", mode=1):
 
     model = Word2Vec(
         corpus_file=get_tmpfile(
-            Path('{}opensub2018_{}.cor'.format(c_root, lang)).absolute()),
+            Path('{}{}/opensub2018_{}.cor'.format(c_root, kind, lang)).absolute()),
         sg=mode,
         workers=cpu_count())
-    model.save('{}word2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))
+    model.save(
+        '{}word2vec/{}/opensub2018_phrases_{}_{}.bin'.format(m_root, kind, lang, mode_str))
 
     end = time.time()
     elapsed = end - start
@@ -161,7 +162,7 @@ def train_pt_ft(lang="en"):
     en_model.save('{}fasttext/cc.{}.300.test.bin'.format(m_root, lang))
 
 
-# train_ft("en")
-# train_ft("es")
-build_phrase_model('en')
-build_phrase_model('es')
+train_w2v()
+train_w2v(lang='es')
+train_w2v(kind='english')
+train_w2v(lang='es', kind='spanish')
