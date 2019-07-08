@@ -20,15 +20,20 @@ m_root = '../resources/models/'
 
 
 def build_phrase_model(lang):
-    mode = 'english' if lang == 'en' else 'spanish'
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    # mode = 'english' if lang == 'en' else 'spanish'
+    mode = 'aligned'
 
-    sentences = LineSentence(Path('{}{}/opensub2018.cor'.format(
-        c_root, mode)))
+    # sentences = LineSentence(Path('{}{}/opensub2018.cor'.format(
+    #     c_root, mode)))
+    sentences = LineSentence(Path('{}{}/opensub2018_{}.cor'.format(
+        c_root, mode, lang)))
 
     phrases = Phrases(sentences=sentences, min_count=1, threshold=1)
     model_phrases = Phraser(phrases)
     model_phrases.save(
-        '{}phrases/opensub2018_{}.bin'.format(m_root, lang))
+        '{}phrases/{}/opensub2018_{}.bin'.format(m_root, mode, lang))
 
 
 def train_w2v(lang="en", mode=1):
@@ -158,3 +163,5 @@ def train_pt_ft(lang="en"):
 
 # train_ft("en")
 # train_ft("es")
+build_phrase_model('en')
+build_phrase_model('es')

@@ -22,20 +22,21 @@ def remove_noise(lang):
     start = time.time()
 
     lines = 0
-    regex = [r' \'', '\'', r'[^a-z\'áéíóú]+', r'^\W|\W$', r'[^a-z\'ñáéíóú]+']
+    regex = [r' \'', r'[^a-z\'áéíóú]+', r'^\W|\W$', r'[^a-z\'ñáéíóú]+']
     first_regex = regex[0] if lang == 'en' else regex[2]
     second_regex = regex[1] if lang == 'en' else regex[3]
+    replace = '\'' if lang == 'en' else ' '
     mode = 'english' if lang == 'en' else 'spanish'
 
     file_input = open(Path(
-        '{}{}/OpenSubtitles2018.{}'.format(rc_root, mode, lang)).absolute(), 'r', encoding='utf8')
+        '{}{}/OpenSubtitles.{}'.format(rc_root, mode, lang)).absolute(), 'r', encoding='utf8')
     file_output = open(Path(
         '{}{}/opensub2018.cor'.format(c_root, mode)).absolute(), 'w+', encoding='utf8')
 
     for line in file_input:
         lines += 1
         first_step = re.sub(r'- ', '', line).lower()
-        second_step = re.sub(first_regex, first_step)
+        second_step = re.sub(first_regex, replace, first_step)
         third_step = re.sub(second_regex, ' ', second_step)
         file_output.write(third_step)
         file_output.write('\n')

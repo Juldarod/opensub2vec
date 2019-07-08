@@ -17,7 +17,7 @@ module.exports = {
                 use: ['babel-loader'],
             },
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /\.s?css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
@@ -48,7 +48,7 @@ module.exports = {
         new webpack.ProgressPlugin(),
         new HtmlWebPackPlugin({
             template: './assets/index.html',
-            favicon: './assets/static/favicon.ico',
+            favicon: './favicon.ico',
             minify: {
                 collapseWhitespace: true,
                 removeComments: true,

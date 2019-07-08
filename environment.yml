@@ -3,12 +3,11 @@ channels:
     - conda-forge
 dependencies:
     - python=3.6.7
+    - pylint
+    - autopep8
     - gensim=3.7.3
     - scikit-learn
     - matplotlib
     - python-annoy
-    - pylint
-    - autopep8
     - flask
-    - simplejson
-    # - gunicorn
+    - flask-cors
