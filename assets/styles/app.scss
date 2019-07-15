@@ -1,2 +1,13 @@
+<<<<<<< HEAD
 @import "./_home.scss";
 @import "./_notfound.scss";
+=======
+@import "./_home.scss";
+@import "./_notfound.scss";
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+>>>>>>> f8fe81c64bbe3ae4796503bab1cda9d9f2a4aea3
