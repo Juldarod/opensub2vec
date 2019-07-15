@@ -15,8 +15,8 @@ import time
 
 
 num_cores = cpu_count()
-c_root = '../resources/corpus/'
-m_root = '../resources/models/'
+corpus_root_path = '../resources/corpus/'
+model_root_path = '../resources/models/'
 
 
 def build_phrase_model(lang):
@@ -26,14 +26,14 @@ def build_phrase_model(lang):
     mode = 'aligned'
 
     # sentences = LineSentence(Path('{}{}/opensub2018.cor'.format(
-    #     c_root, mode)))
+    #     corpus_root_path, mode)))
     sentences = LineSentence(Path('{}{}/opensub2018_{}.cor'.format(
-        c_root, mode, lang)))
+        corpus_root_path, mode, lang)))
 
     phrases = Phrases(sentences=sentences, min_count=1, threshold=1)
     model_phrases = Phraser(phrases)
     model_phrases.save(
-        '{}phrases/{}/opensub2018_{}.bin'.format(m_root, mode, lang))
+        '{}phrases/{}/opensub2018_{}.bin'.format(model_root_path, mode, lang))
 
 
 def train_w2v(lang="en", kind='aligned', mode=1):
@@ -41,18 +41,19 @@ def train_w2v(lang="en", kind='aligned', mode=1):
 
     logging.basicConfig(
         format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # logging.basicConfig(filename=logname, filemode='a',
-    #                     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     mode_str = 'sg' if mode == 1 else 'cbow'
+    filename = 'opensub2018_phrases_{}'.format(
+        lang) if kind == 'aligned' else 'opensub2018_phrases'
 
     model = Word2Vec(
         corpus_file=get_tmpfile(
-            Path('{}{}/opensub2018_{}.cor'.format(c_root, kind, lang)).absolute()),
+            Path('{}{}/{}.cor'.format(corpus_root_path, kind, filename)).absolute()),
         sg=mode,
-        workers=cpu_count())
+        size=300,
+        workers=num_cores)
     model.save(
-        '{}word2vec/{}/opensub2018_phrases_{}_{}.bin'.format(m_root, kind, lang, mode_str))
+        '{}word2vec/{}/{}_{}.bin'.format(model_root_path, kind, filename, mode_str))
 
     end = time.time()
     elapsed = end - start
@@ -60,83 +61,29 @@ def train_w2v(lang="en", kind='aligned', mode=1):
     print('Time elapsed: %f' % elapsed)
 
 
-def train_d2v_by_parts():
-    # Training by parts
-
-    # files = listdir(Path('../resources/corpus/english/parts').absolute())
-
-    # model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10,
-    #                 vector_size=400, negative=5)
-
-    # for f in files:
-    #     if (f[-3:] == "000"):
-    #         model.build_vocab(corpus_file=get_tmpfile(
-    #             Path('../resources/corpus/english/parts/part000').absolute()))
-    #     else:
-    #         model.build_vocab(corpus_file=get_tmpfile(Path(
-    #             '../resources/corpus/english/parts/part{}'.format(f[-3:])).absolute()), update=True)
-
-    #     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/english/parts/part{}'.format(
-    #         f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
-
-    # model.save('../resources/models/doc2vec/english/opensub2018_dm.bin')
-    # model.wv.save('../resources/models/doc2vec/english/opensub2018_dm.kv')
-
-    # files = listdir(Path('../resources/corpus/spanish/parts').absolute())
-
-    # model = Doc2Vec(dm=1, workers=cpu_count(), min_count=10,
-    #                 vector_size=400, negative=5)
-
-    # for f in files:
-    #     if (f[-3:] == "000"):
-    #         model.build_vocab(corpus_file=get_tmpfile(
-    #             Path('../resources/corpus/spanish/parts/part000').absolute()))
-    #     else:
-    #         model.build_vocab(corpus_file=get_tmpfile(Path(
-    #             '../resources/corpus/spanish/parts/part{}'.format(f[-3:])).absolute()), update=True)
-
-    #     model.train(corpus_file=get_tmpfile(Path('../resources/corpus/spanish/parts/part{}'.format(
-    #         f[-3:])).absolute()), total_words=model.corpus_count, epochs=5)
-
-    # model.save('../resources/models/doc2vec/spanish/opensub2018_dm.bin')
-    # model.wv.save('../resources/models/doc2vec/spanish/opensub2018_dm.kv')
-    return
-
-
-def train_d2v(lang="en", mode=1):
+def train_ft(lang="en", kind='aligned', mode=1):
     start = time.time()
 
     logging.basicConfig(
         format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # logging.basicConfig(filename=logname, filemode='a',
-    #                     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-    mode_str = 'dm' if mode == 1 else 'dbow'
+    mode_str = 'sg' if mode == 1 else 'cbow'
+    filename = 'opensub2018_phrases_{}'.format(
+        lang) if kind == 'aligned' else 'opensub2018_phrases'
 
-    model = Doc2Vec(
+    model = FastText(
         corpus_file=get_tmpfile(
-            Path('{}opensub2018_{}.cor'.format(c_root, lang)).absolute()),
-        epochs=5,
-        vector_size=5,
-        dm=mode,
-        workers=cpu_count())
-    model.save('{}doc2vec/opensub2018_{}_{}.bin'.format(m_root, lang, mode_str))
+            Path('{}{}/{}.cor'.format(corpus_root_path, kind, filename)).absolute()),
+        sg=mode,
+        size=300,
+        workers=num_cores)
+    model.save(
+        '{}fasttext/{}/{}_{}.bin'.format(model_root_path, kind, filename, mode_str))
 
     end = time.time()
     elapsed = end - start
 
     print('Time elapsed: %f' % elapsed)
-
-
-def train_ft(lang):
-    logging.basicConfig(
-        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
-    mode = 'english' if lang == 'en' else 'spanish'
-
-    model = FastText(corpus_file=get_tmpfile(Path('{}{}/opensub2018.cor'.format(
-        c_root, mode, lang)).absolute()), sg=1, size=300, workers=num_cores)
-    model.save('{}fasttext/opensub_unigram_{}.bin'.format(m_root, lang))
 
 
 def train_pt_ft(lang="en"):
@@ -148,21 +95,26 @@ def train_pt_ft(lang="en"):
     # es_vecs.save('../resources/models/fasttext/cc.es.300.bin')
 
     en_model = FastText.load(
-        '{}fasttext-pretrained/cc.{}.300.bin'.format(m_root, lang))
+        '{}fasttext-pretrained/cc.{}.300.bin'.format(model_root_path, lang))
     en_model.build_vocab(
         corpus_file=get_tmpfile(Path(
-            '{}aligned/opensub2018_{}.cor'.format(c_root, lang)).absolute()),
+            '{}aligned/opensub2018_{}.cor'.format(corpus_root_path, lang)).absolute()),
         update=True)
     en_model.train(
         corpus_file=get_tmpfile(Path(
-            '{}aligned/opensub2018_{}.cor'.format(c_root, lang)).absolute()),
+            '{}aligned/opensub2018_{}.cor'.format(corpus_root_path, lang)).absolute()),
         total_examples=en_model.corpus_count,
         epochs=en_model.iter,
         workers=num_cores)
-    en_model.save('{}fasttext/cc.{}.300.test.bin'.format(m_root, lang))
+    en_model.save(
+        '{}fasttext/cc.{}.300.test.bin'.format(model_root_path, lang))
 
 
-train_w2v()
-train_w2v(lang='es')
-train_w2v(kind='english')
-train_w2v(lang='es', kind='spanish')
+# train_w2v()
+# train_w2v(lang='es')
+# train_w2v(kind='english')
+# train_w2v(lang='es', kind='spanish')
+# train_ft()
+# train_ft(lang='es')
+train_ft(kind='english')
+train_ft(lang='es', kind='spanish')
