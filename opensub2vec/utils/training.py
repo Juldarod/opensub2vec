@@ -8,6 +8,9 @@ from gensim.models.doc2vec import Doc2Vec
 from gensim.models.word2vec import Word2Vec
 from gensim.models.word2vec import LineSentence
 from gensim.models.fasttext import FastText
+from gensim.models.translation_matrix import TranslationMatrix
+from gensim.models.keyedvectors import KeyedVectors
+
 # from gensim.models.fasttext import load_facebook_model, load_facebook_vectors
 
 import logging
@@ -110,11 +113,47 @@ def train_pt_ft(lang="en"):
         '{}fasttext/cc.{}.300.test.bin'.format(model_root_path, lang))
 
 
+def train_translation_matrix(model='fasttext', source_lang='en', target_lang='es', source='english', target='spanish'):
+
+    source_word_vec_file = "{}{}/{}/opensub2018_phrases_sg.bin".format(
+        model_root_path, model, source)
+    target_word_vec_file = "{}{}/{}/opensub2018_phrases_sg.bin".format(
+        model_root_path, model, target)
+    # ################### Translation Matrix #########################################################
+
+    start = time.time()
+
+    logging.basicConfig(
+        format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
+    source_model = KeyedVectors.load(
+        source_word_vec_file, mmap='r')
+    target_model = KeyedVectors.load(
+        target_word_vec_file, mmap='r')
+
+    with open('../resources/word-pairs-formatted.txt', 'r') as f:
+        word_pair = [tuple(line.strip().split()) for line in f]
+    # print(word_pair[:10])
+
+    trans_model = TranslationMatrix(
+        source_model.wv, target_model.wv, word_pairs=word_pair)
+    trans_model.train(word_pair)
+
+    trans_model.save(
+        '{}translation_matrix/english/opensub2018_to_{}.bin'.format(model_root_path, target))
+
+    end = time.time()
+    elapsed = end - start
+
+    print('Time elapsed: %f' % elapsed)
+
+
 # train_w2v()
 # train_w2v(lang='es')
 # train_w2v(kind='english')
 # train_w2v(lang='es', kind='spanish')
 # train_ft()
 # train_ft(lang='es')
-train_ft(kind='english')
-train_ft(lang='es', kind='spanish')
+# train_ft(kind='english')
+# train_ft(lang='es', kind='spanish')
+train_translation_matrix(model='word2vec')
