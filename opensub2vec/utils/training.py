@@ -4,14 +4,11 @@ from multiprocessing import cpu_count
 
 from gensim.test.utils import get_tmpfile
 from gensim.models.phrases import Phrases, Phraser
-from gensim.models.doc2vec import Doc2Vec
 from gensim.models.word2vec import Word2Vec
 from gensim.models.word2vec import LineSentence
 from gensim.models.fasttext import FastText
 from gensim.models.translation_matrix import TranslationMatrix
 from gensim.models.keyedvectors import KeyedVectors
-
-# from gensim.models.fasttext import load_facebook_model, load_facebook_vectors
 
 import logging
 import time
@@ -25,11 +22,8 @@ model_root_path = '../resources/models/'
 def build_phrase_model(lang):
     logging.basicConfig(
         format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # mode = 'english' if lang == 'en' else 'spanish'
     mode = 'aligned'
 
-    # sentences = LineSentence(Path('{}{}/opensub2018.cor'.format(
-    #     corpus_root_path, mode)))
     sentences = LineSentence(Path('{}{}/opensub2018_{}.cor'.format(
         corpus_root_path, mode, lang)))
 

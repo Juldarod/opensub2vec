@@ -15,7 +15,7 @@ model = []
 def start():
     model.clear()
     model.append(load_model())
-    return jsonify(message="Hello from Flask!")
+    return jsonify(message="Models loaded")
 
 
 @app.route('/plot/<phrase>')

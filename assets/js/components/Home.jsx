@@ -1,66 +1,60 @@
 import React, { Fragment } from 'react';
-import { Button, Checkbox, Icon } from 'semantic-ui-react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { Container, Segment, Popup, Icon, Menu } from 'semantic-ui-react';
 
-class Home extends React.Component {
-    state = {
-        backendStatus: '',
-        activeItem: '',
-    };
+import Models from './Models.jsx';
+import About from './About.jsx';
+import Contact from './Contact.jsx';
 
-    // componentDidMount() {
-    //     axios
-    //         .get('http://localhost:5000')
-    //         .then(response => {
-    //             console.log(response);
-    //             this.setState({ backendStatus: response.data.message });
-    //         })
-    //         .catch(error => console.log(error.response.data));
-    // }
+const Home = () => {
+    return (
+        <Fragment>
+            <Container id="home-menu">
+                <Menu secondary>
+                    <Models trigger={<Menu.Item name=" Models" />} />
+                    <Menu.Menu position="right">
+                        <About trigger={<Menu.Item name="About" />} />
+                        <Contact trigger={<Menu.Item name="Contact" />} />
+                    </Menu.Menu>
+                </Menu>
+            </Container>
+            <Container id="landing">
+                <h1>Opensub2Vec</h1>
 
-    handleCheckboxChange = (e, { value }) => this.setState({ value });
-
-    render() {
-        const { activeItem } = this.state;
-
-        return (
-            <Fragment>
-                <div id="home-menu">
-                    <label>Models</label>
-                    <label>About</label>
-                    <label>Contact</label>
-                </div>
-                <div id="landing">
-                    <h1>Opensub2Vec</h1>
-                    <div id="model-selection">
-                        <label>Select a model</label>
-                        <Checkbox
-                            radio
-                            label="Word2vec"
-                            name="checkboxRadioGroup"
-                            value="this"
-                            checked={this.state.value === 'this'}
-                            onChange={this.handleCheckboxChange}
-                        />
-                        <Checkbox
-                            radio
-                            label="fastText"
-                            name="checkboxRadioGroup"
-                            value="that"
-                            checked={this.state.value === 'that'}
-                            onChange={this.handleCheckboxChange}
-                        />
-                        <Button animated>
-                            <Button.Content visible>Go!</Button.Content>
-                            <Button.Content hidden>
-                                <Icon name="arrow right" />
-                            </Button.Content>
-                        </Button>
+                <label>
+                    Select a model
+                    <Popup
+                        position="top center"
+                        content="Click on models menu for more information"
+                        trigger={<Icon name="question circle" />}
+                    />
+                </label>
+                <Container id="model-selection">
+                    <div>
+                        <Link to="/dashboard">
+                            <Segment
+                                vertical
+                                circular
+                                onClick={() => console.log('word2vec selected')}
+                                inverted
+                            >
+                                word2vec
+                            </Segment>
+                        </Link>
+                        <Link to="/dashboard">
+                            <Segment
+                                circular
+                                onClick={() => console.log('fastText selected')}
+                                inverted
+                            >
+                                fastText
+                            </Segment>
+                        </Link>
                     </div>
-                </div>
-            </Fragment>
-        );
-    }
-}
+                </Container>
+            </Container>
+        </Fragment>
+    );
+};
 
 export default Home;
