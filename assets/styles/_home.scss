@@ -28,7 +28,7 @@
     margin-top: 5%;
     justify-content: space-around;
 
-    div {
+    > div {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-column-gap: 1.5rem;

@@ -8,10 +8,10 @@ import Contact from './Contact.jsx';
 
 const Home = () => {
     return (
-        <Fragment>
+        <React.Fragment>
             <Container id="home-menu">
                 <Menu secondary>
-                    <Models trigger={<Menu.Item name=" Models" />} />
+                    <Models trigger={<Menu.Item name="Models" />} />
                     <Menu.Menu position="right">
                         <About trigger={<Menu.Item name="About" />} />
                         <Contact trigger={<Menu.Item name="Contact" />} />
@@ -31,29 +31,20 @@ const Home = () => {
                 </label>
                 <Container id="model-selection">
                     <div>
-                        <Link to="/dashboard">
-                            <Segment
-                                vertical
-                                circular
-                                onClick={() => console.log('word2vec selected')}
-                                inverted
-                            >
+                        <Link to="/word2vec">
+                            <Segment circular inverted>
                                 word2vec
                             </Segment>
                         </Link>
-                        <Link to="/dashboard">
-                            <Segment
-                                circular
-                                onClick={() => console.log('fastText selected')}
-                                inverted
-                            >
+                        <Link to="/fasttext">
+                            <Segment circular inverted>
                                 fastText
                             </Segment>
                         </Link>
                     </div>
                 </Container>
             </Container>
-        </Fragment>
+        </React.Fragment>
     );
 };
 
