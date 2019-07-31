@@ -1,39 +1,60 @@
-import React from 'react';
+import React from "react";
 import {
-    Segment,
-    Grid,
-    Input,
-    Button,
-    Icon,
-    Transition,
-    Image,
-    Divider,
-} from 'semantic-ui-react';
+  Segment,
+  Grid,
+  Input,
+  Button,
+  Icon,
+  Transition,
+  Image
+} from "semantic-ui-react";
 
-const PlottingSegment = props => {
-    const { model, onSearchChange, onSearchClick, visible, input } = props;
+class PlottingSegment extends React.Component {
+  state = {
+    visible: false,
+    tmpInput: "",
+    input: ""
+  };
+
+  onSearchChange = e => {
+    this.setState({ tmpInput: e.target.value });
+  };
+
+  onSearchClick = async () => {
+    await this.setState({ visible: false });
+    await this.setState({
+      input: this.state.tmpInput
+    });
+    await this.setState({ visible: true });
+  };
+
+  render() {
+    const { model } = this.props;
+    const { visible, input } = this.state;
+    let lang = "";
+    model == "English" ? (lang = "en") : (lang = "es");
+    console.log(lang);
 
     return (
-        <React.Fragment>
-            <Grid.Column>
-                <Input placeholder={model} onChange={e => onSearchChange(e)}>
-                    <input />
-                    <Button icon onClick={() => onSearchClick()}>
-                        <Icon name="play" />
-                    </Button>
-                </Input>
-                <Transition
-                    visible={visible}
-                    animation="horizontal flip"
-                    duration={500}
-                >
-                    <Segment>
-                        <Image src={`http://localhost:5000/plot/en/${input}`} />
-                    </Segment>
-                </Transition>
-            </Grid.Column>
-        </React.Fragment>
+      <Grid.Column>
+        <Input placeholder={model} onChange={e => this.onSearchChange(e)}>
+          <input />
+          <Button icon onClick={() => this.onSearchClick()}>
+            <Icon name="play" />
+          </Button>
+        </Input>
+        <Transition
+          visible={visible}
+          animation="horizontal flip"
+          duration={500}
+        >
+          <Segment>
+            <Image src={`http://localhost:5000/plot/${lang}/${input}`} />
+          </Segment>
+        </Transition>
+      </Grid.Column>
     );
-};
+  }
+}
 
 export default PlottingSegment;
