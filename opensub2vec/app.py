@@ -31,14 +31,18 @@ def load_models(model):
         return make_response(jsonify(message="The model requested is not available"), 400)
 
 
-@app.route('/plot/<language>/<phrase>')
-def pca(language, phrase):
-    if (language == 'english' or language == 'spanish'):
-        model = models[0] if language == 'english' else models[1]
-        image = pca_reduction.plot_vector(model, phrase)
+@app.route('/plot/<lang>/<phrase>')
+def pca(lang, phrase):
+    if (lang == 'en' or lang == 'es'):
+        loaded_model = models[0] if lang == 'en' else models[1]
+        image = pca_reduction.plot_vector(loaded_model, phrase)
         res = make_response(image, 200)
         res.headers['Content-Type'] = 'image/png'
         res.headers['Content-Lengt'] = len(image)
         return res
     else:
-        return make_response(jsonify(message='The language requested is not available'), 400)
+        return make_response(jsonify(message='Language not supported'))
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
