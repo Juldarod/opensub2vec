@@ -8,7 +8,8 @@ import {
   Divider,
   Segment,
   Menu,
-  Tab
+  Tab,
+  Input
 } from "semantic-ui-react";
 import Gear from "../loaders/Gear";
 // import Geometry from '../loaders/Geometry';
@@ -124,14 +125,22 @@ class Dashboard extends React.Component {
               </Divider>
               {/* </ColumnGrid> */}
             </Segment>
+            (sentence translation picture: a sentence in english and its
+            translation in spanish)
             <Segment>
-              (sentence translation picture: a sentence in english and its
-              translation in spanish)
+              <Grid columns={2} relaxed="very">
+                <PlottingSegment model={"English"} />
+                <Grid.Column>
+                  <Input disabled />
+                </Grid.Column>
+              </Grid>
+              <Divider vertical>
+                <Icon name="picture" />
+              </Divider>
             </Segment>
-            <Segment>
-              (wmdistance between original spanish sentence and translated
-              sentences)
-            </Segment>
+            (wmdistance between original spanish sentence and translated
+            sentences)
+            <Segment>{}</Segment>
           </Tab.Pane>
         )
       }

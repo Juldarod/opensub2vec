@@ -2,7 +2,7 @@ from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from gensim.models.word2vec import Word2Vec
 from controllers import pca_reduction
-from controllers.models import load_model, load_translation_matrix
+from controllers.models import load_model, load_translation_matrix, translate_phrase
 
 
 app = Flask(__name__)
@@ -42,6 +42,12 @@ def pca(lang, phrase):
         return res
     else:
         return make_response(jsonify(message='Language not supported'))
+
+
+@app.route('/translate/<phrase>')
+def translate(phrase):
+    res = translate_phrase(models[2], phrase)
+    return jsonify(message=res)
 
 
 if __name__ == '__main__':

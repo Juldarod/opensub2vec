@@ -22,3 +22,13 @@ def load_translation_matrix(model):
         APP_STATIC, 'translation_matrix/{}/opensub2018_english_to_spanish.bin'.format(model))
 
     return TranslationMatrix.load(model_path, mmap='r')
+
+
+def translate_phrase(model, phrase):
+    words = phrase.split(" ")
+    res = []
+    for word in words:
+        res.append(list(model.translate([word], topn=3).values()))
+
+    return res
+    # return model.translate([phrase], topn=3)
