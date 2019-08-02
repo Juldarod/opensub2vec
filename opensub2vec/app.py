@@ -47,7 +47,10 @@ def pca(lang, phrase):
 @app.route('/translate/<phrase>')
 def translate(phrase):
     res = translate_phrase(models[2], phrase)
-    return jsonify(message=res)
+    response = []
+    for el in res:
+        response.append(el[0])
+    return jsonify(message=response)
 
 
 if __name__ == '__main__':

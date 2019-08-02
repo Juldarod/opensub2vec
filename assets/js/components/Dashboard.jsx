@@ -12,8 +12,8 @@ import {
   Input
 } from "semantic-ui-react";
 import Gear from "../loaders/Gear";
-// import Geometry from '../loaders/Geometry';
-// import Roller from '../loaders/Roller';
+import Geometry from "../loaders/Geometry";
+import Roller from "../loaders/Roller";
 import About from "./About.jsx";
 import Contact from "./Contact.jsx";
 import PlottingSegment from "./PlottingSegment.jsx";
@@ -131,7 +131,7 @@ class Dashboard extends React.Component {
               <Grid columns={2} relaxed="very">
                 <PlottingSegment model={"English"} />
                 <Grid.Column>
-                  <Input disabled />
+                  <Input placeholder={"Possible spanish translation"} />
                 </Grid.Column>
               </Grid>
               <Divider vertical>
@@ -140,7 +140,9 @@ class Dashboard extends React.Component {
             </Segment>
             (wmdistance between original spanish sentence and translated
             sentences)
-            <Segment>{}</Segment>
+            <Segment>
+              <Geometry />
+            </Segment>
           </Tab.Pane>
         )
       }

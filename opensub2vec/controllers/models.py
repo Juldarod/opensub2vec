@@ -25,10 +25,10 @@ def load_translation_matrix(model):
 
 
 def translate_phrase(model, phrase):
-    words = phrase.split(" ")
+    words = phrase.split()
     res = []
     for word in words:
-        res.append(list(model.translate([word], topn=3).values()))
+        res.append(list(model.translate([word], topn=10).values()))
 
     return res
     # return model.translate([phrase], topn=3)
