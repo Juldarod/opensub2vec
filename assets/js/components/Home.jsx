@@ -8,7 +8,7 @@ import Contact from './Contact.jsx';
 
 const Home = () => {
     return (
-        <React.Fragment>
+        <Fragment>
             <Container id="home-menu">
                 <Menu secondary>
                     <Models trigger={<Menu.Item name="Models" />} />
@@ -44,7 +44,7 @@ const Home = () => {
                     </div>
                 </Container>
             </Container>
-        </React.Fragment>
+        </Fragment>
     );
 };
 

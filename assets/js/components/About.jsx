@@ -3,10 +3,7 @@ import { Modal, Header } from 'semantic-ui-react';
 
 const About = props => {
     return (
-        <Modal
-            dimmer={'blurring'}
-            /* centered={false} */ trigger={props.trigger}
-        >
+        <Modal dimmer={'blurring'} trigger={props.trigger}>
             <Header icon="book" content="About" />
             <Modal.Content>
                 <p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Icon, Container } from 'semantic-ui-react';
+import { Segment, Container } from 'semantic-ui-react';
 
 const NotFound = () => {
     return (

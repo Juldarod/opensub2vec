@@ -8,6 +8,8 @@ dependencies:
     - gensim=3.7.3
     - scikit-learn
     - matplotlib
-    # - python-annoy
+    - python-annoy
+    - spacy
+    - pyemd
     - flask
     - flask-cors
