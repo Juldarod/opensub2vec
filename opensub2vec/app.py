@@ -2,7 +2,7 @@ from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from gensim.models.word2vec import Word2Vec
 from controllers import pca_reduction
-from controllers.models import load_model, load_translation_matrix, translate_phrase
+from controllers.models import load_model, load_translation_matrix, remove_stopwords, translate_phrase, get_wmdistance
 
 
 app = Flask(__name__)
@@ -44,13 +44,28 @@ def pca(lang, phrase):
         return make_response(jsonify(message='Language not supported'))
 
 
+@app.route('/plot/translation/<source>/<target>')
+def pca_translation(source, target):
+    image = pca_reduction.plot_translation_vector(models[1], source, target)
+    res = make_response(image, 200)
+    res.headers['Content-Type'] = 'image/png'
+    res.headers['Content-Lengt'] = len(image)
+    return res
+
+
 @app.route('/translate/<phrase>')
 def translate(phrase):
     res = translate_phrase(models[2], phrase)
-    response = []
-    for el in res:
-        response.append(el[0])
-    return jsonify(message=response)
+    words = phrase.split().__iter__()
+    response = [{"original": next(words), "translations": el[0]} for el in res]
+    return jsonify({"words": response})
+
+
+@app.route('/wmdistance/<source>/<target>')
+def wmdistance(source, target):
+    source_no_stop = remove_stopwords('es', source)
+    target_no_stop = remove_stopwords('es', target)
+    return jsonify(wmdistance=get_wmdistance(models[1], source_no_stop, target_no_stop))
 
 
 if __name__ == '__main__':

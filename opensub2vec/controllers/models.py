@@ -30,23 +30,21 @@ def load_translation_matrix(model):
 
 
 def remove_stopwords(lang, phrase):
-    words = []
-    for word in spacy_en(phrase) if lang == 'en' else spacy_es(phrase):
-        if not word.is_stop:
-            words.append(word.text.lower())
-    return words
+    if lang == 'en':
+        return [word.text.lower() for word in spacy_en(phrase) if not word.is_stop]
+    else:
+        return [word.text.lower() for word in spacy_es(phrase) if not word.is_stop]
 
 
 def translate_phrase(model, phrase):
     words = remove_stopwords('en', phrase)
-    print(words)
-    res = []
-    for word in words:
-        res.append(list(model.translate([word], topn=5).values()))
-
-    return res
+    return [list(model.translate([word], topn=5).values()) for word in words]
 
 
 # source and target are a list of strings
 def get_wmdistance(model, source, target):
+    source = ' '.join(source)
+    target = ' '.join(target)
+    print(source)
+    print(target)
     return model.wmdistance(source, target)
