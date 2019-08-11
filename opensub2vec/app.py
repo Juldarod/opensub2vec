@@ -56,8 +56,7 @@ def pca_translation(source, target):
 @app.route('/translate/<phrase>')
 def translate(phrase):
     res = translate_phrase(models[2], phrase)
-    words = phrase.split().__iter__()
-    response = [{"original": next(words), "translations": el[0]} for el in res]
+    response = [{"original": el[0][0], "translations": el[0][1]} for el in res]
     return jsonify({"words": response})
 
 

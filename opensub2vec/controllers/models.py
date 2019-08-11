@@ -38,7 +38,7 @@ def remove_stopwords(lang, phrase):
 
 def translate_phrase(model, phrase):
     words = remove_stopwords('en', phrase)
-    return [list(model.translate([word], topn=5).values()) for word in words]
+    return [list(model.translate([word], topn=5).items()) for word in words]
 
 
 # source and target are a list of strings

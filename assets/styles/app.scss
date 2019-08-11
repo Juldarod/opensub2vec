@@ -1,24 +1,28 @@
-@import "./home.scss";
-@import "./notfound.scss";
+@import './home.scss';
+@import './notfound.scss';
 
-@import "./gear";
-@import "./geometry";
+@import './gear';
+// @import './geometry';
 // @import "./roller";
-@import "./dashboard";
+@import './dashboard';
 
 #app {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.99), rgba(0, 0, 0, 0.7)),
-    url("../static/letters-691842.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.99), rgba(0, 0, 0, 0.7)),
+        url('../static/letters-691842.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
+// body {
+//     display: block;
+// }
+
 h1 {
-  font-size: 100px;
+    font-size: 100px;
 }
