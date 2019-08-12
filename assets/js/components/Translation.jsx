@@ -24,20 +24,22 @@ const translate = async sentence => {
 };
 
 const getTranslatedWords = async vectors => {
-    const words = _.concat(...vectors[1], ...vectors[2], ...vectors[3]);
-    // const words = vectors[1];
+    // const words = _.concat(...vectors[1], ...vectors[2]);
+    const words = vectors[1];
     return words.join(' ');
 };
 
 export default class Translation extends Component {
     state = {
-        visible: false,
+        visible: true,
         tmpEnInput: '',
         tmpSpInput: '',
         enInput: '',
         spInput: '',
         withoutStopwords: '',
         words: '',
+
+        image: 'https://react.semantic-ui.com/images/wireframe/image.png',
     };
 
     onEnglishChange = e => {
@@ -63,8 +65,14 @@ export default class Translation extends Component {
         console.log(newSent);
 
         const words = await getTranslatedWords(newSent);
+        await this.setState({ visible: false });
         await this.setState({ withoutStopwords: _.first(newSent).join(' ') });
         await this.setState({ words });
+        await this.setState({
+            image: `http://localhost:5000/plot/translation/${
+                this.state.withoutStopwords
+            }/${this.state.words}`,
+        });
         await this.setState({ visible: true });
     };
 
@@ -101,11 +109,7 @@ export default class Translation extends Component {
                     duration={500}
                 >
                     <Segment>
-                        <Image
-                            src={`http://localhost:5000/plot/translation/${
-                                this.state.withoutStopwords
-                            }/${this.state.words}`}
-                        />
+                        <Image size="big" src={this.state.image} />
                     </Segment>
                 </Transition>
             </Fragment>

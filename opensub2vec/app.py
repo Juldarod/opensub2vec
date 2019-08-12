@@ -46,7 +46,7 @@ def pca(lang, phrase):
 
 @app.route('/plot/translation/<source>/<target>')
 def pca_translation(source, target):
-    image = pca_reduction.plot_translation_vector(models[1], source, target)
+    image = pca_reduction.plot_translation_vector(models, source, target)
     res = make_response(image, 200)
     res.headers['Content-Type'] = 'image/png'
     res.headers['Content-Lengt'] = len(image)

@@ -26,8 +26,8 @@ def plot_translation_vector(model, sentence, translation):
     words = sentence.split()
     translations = translation.split()
 
-    X = model.wv.__getitem__(words)
-    Y = model.wv.__getitem__(translations)
+    X = model[0].wv.__getitem__(words)
+    Y = model[1].wv.__getitem__(translations)
 
     pca = PCA(n_components=2)
 
