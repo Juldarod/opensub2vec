@@ -29,9 +29,32 @@ const getTranslatedWords = async vectors => {
     return words.join(' ');
 };
 
+const calclWmdistances = (source, target) => {
+    console.log(target);
+
+    const wmdistances = target.map(
+        async sentence =>
+            await axios
+                .get(
+                    `http://localhost:5000/wmdistance/${source}/${sentence.join(
+                        ' '
+                    )}`
+                )
+                .then(res => {
+                    console.log(res);
+                    return res.data.wmdistance;
+                })
+    );
+
+    console.log(wmdistances);
+
+    // return wmdistances;
+};
+
 export default class Translation extends Component {
     state = {
         visible: true,
+        wmvisible: false,
         tmpEnInput: '',
         tmpSpInput: '',
         enInput: '',
@@ -74,6 +97,9 @@ export default class Translation extends Component {
             }/${this.state.words}`,
         });
         await this.setState({ visible: true });
+
+        calclWmdistances(this.state.spInput, _.tail(newSent));
+        await this.setState({ wmvisible: true });
     };
 
     render() {
@@ -111,6 +137,13 @@ export default class Translation extends Component {
                     <Segment>
                         <Image size="big" src={this.state.image} />
                     </Segment>
+                </Transition>
+                <Transition
+                    visible={this.state.wmvisible}
+                    animation="horizontal flip"
+                    duration={500}
+                >
+                    <Segment>asd</Segment>
                 </Transition>
             </Fragment>
         );
