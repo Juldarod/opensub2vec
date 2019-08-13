@@ -12,6 +12,7 @@ import {
 import axios from 'axios';
 import _ from 'lodash';
 
+// ( "" ) -> [{}, ..., {}]
 const translate = async sentence => {
     console.log('Beginning translation...');
 
@@ -23,32 +24,36 @@ const translate = async sentence => {
     return translation;
 };
 
+// ( [[], ..., []] ) -> ""
 const getTranslatedWords = async vectors => {
-    // const words = _.concat(...vectors[1], ...vectors[2]);
-    const words = vectors[1];
+    const words = _.concat(...vectors[1], ...vectors[2]);
+    // const words = vectors[1];
     return words.join(' ');
 };
 
-const calclWmdistances = (source, target) => {
+// ( "", [ [], ..., [] ] ) -> []
+const calclWmdistances = async (source, target) => {
     console.log(target);
 
-    const wmdistances = target.map(
-        async sentence =>
-            await axios
+    const wmdistances = await Promise.all(
+        target.map(async sentence => {
+            const translatedSentence = await axios
                 .get(
                     `http://localhost:5000/wmdistance/${source}/${sentence.join(
                         ' '
                     )}`
                 )
                 .then(res => {
-                    console.log(res);
                     return res.data.wmdistance;
-                })
+                });
+
+            return translatedSentence;
+        })
     );
 
     console.log(wmdistances);
 
-    // return wmdistances;
+    return wmdistances;
 };
 
 export default class Translation extends Component {
@@ -61,6 +66,9 @@ export default class Translation extends Component {
         spInput: '',
         withoutStopwords: '',
         words: '',
+
+        translatedSentences: [],
+        wmdistances: [],
 
         image: 'https://react.semantic-ui.com/images/wireframe/image.png',
     };
@@ -85,6 +93,10 @@ export default class Translation extends Component {
             ...translation.translations,
         ]);
         const newSent = _.zip(...sentences);
+
+        await this.setState({
+            translatedSentences: _.tail(newSent).map(sent => sent.join(' ')),
+        });
         console.log(newSent);
 
         const words = await getTranslatedWords(newSent);
@@ -98,7 +110,11 @@ export default class Translation extends Component {
         });
         await this.setState({ visible: true });
 
-        calclWmdistances(this.state.spInput, _.tail(newSent));
+        const wmdistances = await calclWmdistances(
+            this.state.spInput,
+            _.tail(newSent)
+        );
+        await this.setState({ wmdistances });
         await this.setState({ wmvisible: true });
     };
 
@@ -143,7 +159,27 @@ export default class Translation extends Component {
                     animation="horizontal flip"
                     duration={500}
                 >
-                    <Segment>asd</Segment>
+                    <Segment>
+                        {this.state.spInput} vs{' '}
+                        {this.state.translatedSentences[0]} ={' '}
+                        {this.state.wmdistances[0]}
+                        <br />
+                        {this.state.spInput} vs{' '}
+                        {this.state.translatedSentences[1]} ={' '}
+                        {this.state.wmdistances[1]}
+                        <br />
+                        {this.state.spInput} vs{' '}
+                        {this.state.translatedSentences[2]} ={' '}
+                        {this.state.wmdistances[2]}
+                        <br />
+                        {this.state.spInput} vs{' '}
+                        {this.state.translatedSentences[3]} ={' '}
+                        {this.state.wmdistances[3]}
+                        <br />
+                        {this.state.spInput} vs{' '}
+                        {this.state.translatedSentences[4]} ={' '}
+                        {this.state.wmdistances[4]}
+                    </Segment>
                 </Transition>
             </Fragment>
         );

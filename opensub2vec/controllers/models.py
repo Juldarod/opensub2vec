@@ -47,4 +47,4 @@ def get_wmdistance(model, source, target):
     target = ' '.join(target)
     print(source)
     print(target)
-    return model.wmdistance(source, target)
+    return "{0:.4f}".format(model.wmdistance(source, target))
