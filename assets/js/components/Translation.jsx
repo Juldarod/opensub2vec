@@ -151,7 +151,7 @@ export default class Translation extends Component {
                     duration={500}
                 >
                     <Segment>
-                        <Image size="big" src={this.state.image} />
+                        <Image src={this.state.image} fluid />
                     </Segment>
                 </Transition>
                 <Transition
