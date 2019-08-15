@@ -12,7 +12,7 @@ def remove_stopwords(lang, phrase) -> str:
         return [word.text.lower() for word in spacy_es(phrase) if not word.is_stop]
 
 
-def translate(model, phrase) -> List[List[str]]:
+def translate(model, phrase: str) -> List[List[str]]:
     words = remove_stopwords('en', phrase)
     return [list(model.translate([word], topn=5).items()) for word in words]
 

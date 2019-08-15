@@ -56,7 +56,7 @@ def plot(lang, sentence):
 
 @app.route('/plot/translation/<source>/<target>')
 def plot_translation(source, target):
-    image = plotting.plot_translations(models, source, target)
+    image = plotting.plot_translations(loaded_models, source, target)
     response = make_response(image, 200)
     response.headers['Content-Type'] = 'image/png'
     response.headers['Content-Lengt'] = len(image)
@@ -65,7 +65,7 @@ def plot_translation(source, target):
 
 @app.route('/translate/<sentence>')
 def translate(sentence):
-    translated = translation.translate(models[2], sentence)
+    translated = translation.translate(loaded_models[2], sentence)
     response = [{"original": el[0][0], "translations": el[0][1]}
                 for el in translated]
     return jsonify(data=response)
@@ -81,7 +81,8 @@ def wmdistance(source, target):
     source_no_stop = translation.remove_stopwords('es', source)
     target_no_stop = translation.remove_stopwords('es', target)
     response = translation.get_wmdistance(
-        models[1], source_no_stop, target_no_stop)
+        loaded_models[1], source_no_stop, target_no_stop
+    )
     return jsonify(data=response)
 
 
