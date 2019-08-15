@@ -2,9 +2,9 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Segment, Popup, Icon, Menu } from 'semantic-ui-react';
 
-import Models from './Models.jsx';
-import About from './About.jsx';
-import Contact from './Contact.jsx';
+import Models from './Navbar/Models.jsx';
+import About from './Navbar/About.jsx';
+import Contact from './Navbar/Contact.jsx';
 
 const Home = () => {
     return (

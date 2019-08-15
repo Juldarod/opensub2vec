@@ -1,5 +1,5 @@
 import React from 'react';
-import Gear from '../loaders/Gear';
+import Gear from '../loaders/Gear.jsx';
 
 const DashboardLoader = () => {
     return (

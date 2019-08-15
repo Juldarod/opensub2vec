@@ -8,6 +8,7 @@ import {
     Segment,
     Image,
     Divider,
+    Table,
 } from 'semantic-ui-react';
 import axios from 'axios';
 import _ from 'lodash';
@@ -18,7 +19,10 @@ const translate = async sentence => {
 
     const translation = await axios
         .get(`http://localhost:5000/translate/${sentence}`)
-        .then(res => res.data.words)
+        .then(res => {
+            console.log(res.data);
+            return res.data.result;
+        })
         .catch(error => console.log(error.response));
 
     return translation;
@@ -44,7 +48,7 @@ const calclWmdistances = async (source, target) => {
                     )}`
                 )
                 .then(res => {
-                    return res.data.wmdistance;
+                    return res.data.result;
                 });
 
             return translatedSentence;
@@ -160,7 +164,75 @@ export default class Translation extends Component {
                     duration={500}
                 >
                     <Segment>
-                        {this.state.spInput} vs{' '}
+                        <Table basic="very" celled>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Initial</Table.HeaderCell>
+                                    <Table.HeaderCell>
+                                        Translated
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell>Score</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {this.state.spInput}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.translatedSentences[0]}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.wmdistances[0]}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {this.state.spInput}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.translatedSentences[1]}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.wmdistances[1]}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {this.state.spInput}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.translatedSentences[2]}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.wmdistances[2]}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {this.state.spInput}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.translatedSentences[3]}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.wmdistances[3]}
+                                    </Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>
+                                        {this.state.spInput}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.translatedSentences[4]}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {this.state.wmdistances[4]}
+                                    </Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+                        {/* {this.state.spInput} vs{' '}
                         {this.state.translatedSentences[0]} ={' '}
                         {this.state.wmdistances[0]}
                         <br />
@@ -178,7 +250,7 @@ export default class Translation extends Component {
                         <br />
                         {this.state.spInput} vs{' '}
                         {this.state.translatedSentences[4]} ={' '}
-                        {this.state.wmdistances[4]}
+                        {this.state.wmdistances[4]} */}
                     </Segment>
                 </Transition>
             </Fragment>

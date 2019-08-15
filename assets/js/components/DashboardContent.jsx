@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Menu, Tab } from 'semantic-ui-react';
-import About from './About.jsx';
-import Contact from './Contact.jsx';
+import About from './Navbar/About.jsx';
+import Contact from './Navbar/Contact.jsx';
 
 const DashboardContent = ({ panes }) => {
     return (

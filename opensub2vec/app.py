@@ -32,13 +32,13 @@ def load(name):
 @app.route('/mostsimilar/<lang>/<word>')
 def similar(lang, word):
     required_model = loaded_models[0] if lang == 'en' else loaded_models[1]
-    return jsonify(data=models.msimilar(required_model, word))
+    return jsonify(result=models.msimilar(required_model, word))
 
 
 @app.route('/analogy/<lang>/<words>')
 def analogies(lang, words):
     required_model = loaded_models[0] if lang == 'en' else loaded_models[1]
-    return jsonify(data=models.analogy(required_model, words))
+    return jsonify(result=models.analogy(required_model, words))
 
 
 @app.route('/plot/<lang>/<sentence>')
@@ -68,12 +68,12 @@ def translate(sentence):
     translated = translation.translate(loaded_models[2], sentence)
     response = [{"original": el[0][0], "translations": el[0][1]}
                 for el in translated]
-    return jsonify(data=response)
+    return jsonify(result=response)
 
 
-@app.route('/remove/es/<sentence>')
-def remove(sentence):
-    return translation.remove_stopwords('es', sentence)
+@app.route('/remove/<lang>/<sentence>')
+def remove(lang, sentence):
+    return jsonify(result=translation.remove_stopwords(lang, sentence))
 
 
 @app.route('/wmdistance/<source>/<target>')
@@ -83,7 +83,7 @@ def wmdistance(source, target):
     response = translation.get_wmdistance(
         loaded_models[1], source_no_stop, target_no_stop
     )
-    return jsonify(data=response)
+    return jsonify(result=response)
 
 
 if __name__ == '__main__':
