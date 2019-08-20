@@ -8,6 +8,7 @@ import {
     Transition,
     Image,
 } from 'semantic-ui-react';
+import axios from 'axios';
 
 class PlottingSegment extends Component {
     state = {
@@ -20,10 +21,15 @@ class PlottingSegment extends Component {
         this.setState({ tmpInput: e.target.value });
     };
 
-    onSearchClick = async () => {
+    onSearchClick = async lang => {
         await this.setState({ visible: false });
+        const phrases = await axios
+            .get(`http://localhost:5000/phraser/${lang}/${this.state.tmpInput}`)
+            .then(res => {
+                return res.data.phrases;
+            });
         await this.setState({
-            input: this.state.tmpInput,
+            input: phrases,
         });
         await this.setState({ visible: true });
     };
@@ -41,7 +47,7 @@ class PlottingSegment extends Component {
                     onChange={e => this.onSearchChange(e)}
                 >
                     <input />
-                    <Button icon onClick={() => this.onSearchClick()}>
+                    <Button icon onClick={() => this.onSearchClick(lang)}>
                         <Icon name="play" />
                     </Button>
                 </Input>

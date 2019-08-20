@@ -18,19 +18,19 @@ const panes = [
 
 class Dashboard extends Component {
     state = {
-        modelLoaded: false,
+        modelLoaded: true,
     };
 
     componentDidMount() {
         const { model } = this.props.match.params;
 
-        axios
-            .get(`http://localhost:5000/model/load/${model}`)
-            .then(response => {
-                console.log(response);
-                this.setState({ modelLoaded: true });
-            })
-            .catch(error => console.log(error.response));
+        // axios
+        //     .get(`http://localhost:5000/model/load/${model}`)
+        //     .then(response => {
+        //         console.log(response);
+        //         this.setState({ modelLoaded: true });
+        //     })
+        //     .catch(error => console.log(error.response));
     }
 
     render() {

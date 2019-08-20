@@ -3,6 +3,7 @@ from gensim.models.translation_matrix import TranslationMatrix
 # from gensim.models.word2vec import Word2Vec
 # from gensim.models.fasttext import FastText
 from gensim.models.keyedvectors import KeyedVectors
+from gensim.models.phrases import Phraser
 
 
 import os
@@ -18,10 +19,16 @@ def load_model(name, lang):
     return KeyedVectors.load(model_path, mmap='r')
 
 
-def load_translation_matrix(name):
+def load_translation_matrix(name, source, target):
     model_path = os.path.join(
-        APP_STATIC, 'translation_matrix/{}/opensub2018_english_to_spanish.bin'.format(name))
+        APP_STATIC, 'translation_matrix/{}/opensub2018_{}_to_{}.bin'.format(name, source, target))
     return TranslationMatrix.load(model_path, mmap='r')
+
+
+def load_phraser(lang):
+    model_path = os.path.join(
+        APP_STATIC, 'phrases/opensub2018_{}.bin'.format(lang))
+    return Phraser.load(model_path, mmap='r')
 
 
 def msimilar(model, word):
@@ -35,3 +42,8 @@ def analogy(model, words):
         positive=[word_array[0], word_array[1]],
         negative=[word_array[2]]
     ))
+
+
+def phraser(model, sentence):
+    tokenized_sentence = sentence.split()
+    return ' '.join(model[tokenized_sentence])

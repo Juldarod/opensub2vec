@@ -86,9 +86,19 @@ export default class Translation extends Component {
     };
 
     onPlayClick = async () => {
+        const phrases_en = await axios
+            .get(`http://localhost:5000/phraser/en/${this.state.tmpEnInput}`)
+            .then(res => {
+                return res.data.phrases;
+            });
+        const phrases_es = await axios
+            .get(`http://localhost:5000/phraser/es/${this.state.tmpSpInput}`)
+            .then(res => {
+                return res.data.phrases;
+            });
         await this.setState({
-            enInput: this.state.tmpEnInput,
-            spInput: this.state.tmpSpInput,
+            enInput: phrases_en,
+            spInput: phrases_es,
         });
 
         const translatedWords = await translate(this.state.enInput);

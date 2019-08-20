@@ -109,10 +109,10 @@ def train_pt_ft(lang="en"):
 
 def train_translation_matrix(model='fasttext', source_lang='en', target_lang='es', source='english', target='spanish'):
 
-    source_word_vec_file = "{}{}/{}/opensub2018_phrases_sg.bin".format(
-        model_root_path, model, source)
-    target_word_vec_file = "{}{}/{}/opensub2018_phrases_sg.bin".format(
-        model_root_path, model, target)
+    source_word_vec_file = "{}{}/opensub2018_{}_sg.bin".format(
+        model_root_path, model, source_lang)
+    target_word_vec_file = "{}{}/opensub2018_{}_sg.bin".format(
+        model_root_path, model, target_lang)
     # ################### Translation Matrix #########################################################
 
     start = time.time()
@@ -126,15 +126,17 @@ def train_translation_matrix(model='fasttext', source_lang='en', target_lang='es
         target_word_vec_file, mmap='r')
 
     with open('../resources/word-pairs-formatted.txt', 'r') as f:
-        word_pair = [tuple(line.strip().split()) for line in f]
+        # word_pair = [tuple(line.strip().split()) for line in f]
+        word_pair = [tuple([line.strip().split()[1],
+                            line.strip().split()[0]]) for line in f]
     # print(word_pair[:10])
 
     trans_model = TranslationMatrix(
-        source_model.wv, target_model.wv, word_pairs=word_pair)
+        source_model.wv, target_model.wv)
     trans_model.train(word_pair)
 
     trans_model.save(
-        '{}translation_matrix/english/opensub2018_to_{}.bin'.format(model_root_path, target))
+        '{}translation_matrix/{}/opensub2018_{}_to_{}.bin'.format(model_root_path, model, source, target))
 
     end = time.time()
     elapsed = end - start
@@ -150,4 +152,9 @@ def train_translation_matrix(model='fasttext', source_lang='en', target_lang='es
 # train_ft(lang='es')
 # train_ft(kind='english')
 # train_ft(lang='es', kind='spanish')
-train_translation_matrix(model='word2vec')
+# train_translation_matrix()
+# train_translation_matrix(model='word2vec')
+train_translation_matrix(source='spanish', target='english',
+                         source_lang='es', target_lang='en')
+train_translation_matrix(model='word2vec', source='spanish',
+                         target='english', source_lang='es', target_lang='en')

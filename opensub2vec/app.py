@@ -22,8 +22,16 @@ def load(name):
         loaded_models.append(english_model)
         spanish_model = models.load_model(name, 'es')
         loaded_models.append(spanish_model)
-        translation_model = models.load_translation_matrix(name)
-        loaded_models.append(translation_model)
+        translation_model_en_es = models.load_translation_matrix(
+            name, 'english', 'spanish')
+        loaded_models.append(translation_model_en_es)
+        translation_model_es_en = models.load_translation_matrix(
+            name, 'spanish', 'english')
+        loaded_models.append(translation_model_es_en)
+        phraser_en = models.load_phraser('en')
+        loaded_models.append(phraser_en)
+        phraser_es = models.load_phraser('es')
+        loaded_models.append(phraser_es)
         return jsonify(message="{} loaded".format(name))
     else:
         return make_response(jsonify(message="The model requested is not available"), 400)
@@ -84,6 +92,13 @@ def wmdistance(source, target):
         loaded_models[1], source_no_stop, target_no_stop
     )
     return jsonify(result=response)
+
+
+@app.route('/phraser/<lang>/<sentence>')
+def phrases(lang, sentence):
+    res = models.phraser(
+        loaded_models[4] if lang == 'en' else loaded_models[5], sentence)
+    return jsonify(phrases=res)
 
 
 if __name__ == '__main__':

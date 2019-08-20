@@ -34,7 +34,16 @@ export default class Similarity extends Component {
     onSearchClick = async () => {
         await this.setState({ visible: false });
         await this.setState({ similars: [] });
-        await this.setState({ input: this.state.tmpInput });
+        const phrases = await axios
+            .get(
+                `http://localhost:5000/phraser/${this.state.lang}/${
+                    this.state.tmpInput
+                }`
+            )
+            .then(res => {
+                return res.data.phrases;
+            });
+        await this.setState({ input: phrases });
         await axios
             .get(
                 `http://localhost:5000/mostsimilar/${

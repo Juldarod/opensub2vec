@@ -38,10 +38,23 @@ export default class Analogy extends Component {
     };
 
     onSearchClick = async () => {
+        const phrases1 = await axios
+            .get(`http://localhost:5000/phraser/en/${this.state.input1}`)
+            .then(res => {
+                return res.data.phrases;
+            });
+        const phrases2 = await axios
+            .get(`http://localhost:5000/phraser/en/${this.state.input2}`)
+            .then(res => {
+                return res.data.phrases;
+            });
+        const phrases3 = await axios
+            .get(`http://localhost:5000/phraser/en/${this.state.input3}`)
+            .then(res => {
+                return res.data.phrases;
+            });
         await this.setState({
-            input: `${this.state.input3} ${this.state.input2} ${
-                this.state.input1
-            }`,
+            input: `${phrases3} ${phrases2} ${phrases1}`,
         });
         await axios
             .get(`http://localhost:5000/analogy/en/${this.state.input}`)
