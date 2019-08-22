@@ -5,7 +5,7 @@ spacy_en = spacy.load('en_core_web_sm')
 spacy_es = spacy.load('es_core_news_sm')
 
 
-def remove_stopwords(lang, phrase) -> str:
+def remove_stopwords(lang, phrase) -> List[str]:
     if lang == 'en':
         return [word.text.lower() for word in spacy_en(phrase) if not word.is_stop]
     else:
@@ -18,6 +18,6 @@ def translate(model, phrase: str) -> List[List[str]]:
 
 
 def get_wmdistance(model, source: List[str], target: List[str]) -> str:
-    source = ' '.join(source)
-    target = ' '.join(target)
+    # source = ' '.join(source)
+    # target = ' '.join(target)
     return "{0:.4f}".format(model.wmdistance(source, target))
