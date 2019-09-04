@@ -18,6 +18,6 @@ def translate(model, phrase: str) -> List[List[str]]:
 
 
 def get_wmdistance(model, source: List[str], target: List[str]) -> str:
-    source = ' '.join(source)
-    target = ' '.join(target)
+    # source = ' '.join(source)
+    # target = ' '.join(target)
     return "{0:.4f}".format(model.wmdistance(source, target))

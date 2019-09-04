@@ -32,18 +32,15 @@ export default class Similarity extends Component {
     };
 
     onSearchClick = async () => {
-        await this.setState({ visible: false });
         await this.setState({ similars: [] });
+        const lang = this.state.toggle ? 'english' : 'spanish';
         const phrases = await axios
-            .get(
-                `http://localhost:5000/phraser/${this.state.lang}/${
-                    this.state.tmpInput
-                }`
-            )
+            .get(`http://localhost:5000/phraser/${lang}/${this.state.tmpInput}`)
             .then(res => {
                 return res.data.phrases;
             });
         await this.setState({ input: phrases });
+
         await axios
             .get(
                 `http://localhost:5000/mostsimilar/${
@@ -51,10 +48,10 @@ export default class Similarity extends Component {
                 }/${this.state.input}`
             )
             .then(async res => {
-                console.log(res.data.result);
-
+                // console.log(res.data.result);
                 await this.setState({ similars: res.data.result });
             });
+        await this.setState({ visible: false });
         await this.setState({ visible: true });
     };
 
@@ -85,33 +82,38 @@ export default class Similarity extends Component {
                                 onChange={() => this.onCheckboxChange()}
                             />
                         </Input>
-                        <Transition
+                        {/* <Transition
                             visible={this.state.visible}
                             animation="horizontal flip"
                             duration={500}
-                        >
-                            <Segment>
-                                {this.state.similars.length == 0 ? (
-                                    <p>
-                                        <Image src={blankPicture} />
-                                    </p>
-                                ) : (
-                                    <p>
-                                        <Image
-                                            src={`http://localhost:5000/plot/${
-                                                this.state.toggle ? 'en' : 'es'
-                                            }/${
-                                                this.state.input
-                                            } ${this.state.similars
-                                                .map(el => el[0])
-                                                .join(' ')}`}
-                                        />
-                                    </p>
-                                )}
-                            </Segment>
-                        </Transition>
+                        > */}
+                        <Segment>
+                            {this.state.similars.length == 0 ? (
+                                <p>
+                                    <Image src={blankPicture} />
+                                </p>
+                            ) : (
+                                <p>
+                                    <Image
+                                        src={`http://localhost:5000/plot/${
+                                            this.state.toggle ? 'en' : 'es'
+                                        }/${
+                                            this.state.input
+                                        } ${this.state.similars
+                                            .map(el => el[0])
+                                            .join(' ')}`}
+                                    />
+                                </p>
+                            )}
+                        </Segment>
+                        {/* </Transition> */}
                     </Grid.Column>
                     <Grid.Column verticalAlign="middle">
+                        {/* <Transition
+                            visible={this.state.visible}
+                            animation="horizontal flip"
+                            duration={500}
+                        > */}
                         <Segment>
                             {this.state.similars.length == 0 ? (
                                 <Fragment>
@@ -154,6 +156,7 @@ export default class Similarity extends Component {
                                 </Table>
                             )}
                         </Segment>
+                        {/* </Transition> */}
                     </Grid.Column>
                 </Grid>
             </Segment>

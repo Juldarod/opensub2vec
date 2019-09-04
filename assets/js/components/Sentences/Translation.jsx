@@ -91,8 +91,11 @@ export default class Translation extends Component {
             .then(res => {
                 return res.data.phrases;
             });
+        const es_non_stop = await axios
+            .get(`http://localhost:5000/remove/es/${this.state.tmpSpInput}`)
+            .then(res => res.data.result.join(' '));
         const phrases_es = await axios
-            .get(`http://localhost:5000/phraser/es/${this.state.tmpSpInput}`)
+            .get(`http://localhost:5000/phraser/es/${es_non_stop}`)
             .then(res => {
                 return res.data.phrases;
             });
@@ -118,9 +121,7 @@ export default class Translation extends Component {
         await this.setState({ withoutStopwords: _.first(newSent).join(' ') });
         await this.setState({ words });
         await this.setState({
-            image: `http://localhost:5000/plot/translation/${
-                this.state.withoutStopwords
-            }/${this.state.words}`,
+            image: `http://localhost:5000/plot/translation/${this.state.withoutStopwords}/${this.state.words}`,
         });
         await this.setState({ visible: true });
 
@@ -165,7 +166,11 @@ export default class Translation extends Component {
                     duration={500}
                 >
                     <Segment>
-                        <Image src={this.state.image} fluid />
+                        <Image
+                            src={this.state.image}
+                            centered
+                            style={{ width: '70%' }}
+                        />
                     </Segment>
                 </Transition>
                 <Transition

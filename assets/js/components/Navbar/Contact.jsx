@@ -6,12 +6,8 @@ const Contact = props => {
         <Modal dimmer={'blurring'} trigger={props.trigger}>
             <Header icon="address book" content="Contact" />
             <Modal.Content>
-                <p>
-                    Your inbox is getting full, would you like us to enable
-                    automatic archiving of old messages? Your inbox is getting
-                    full, would you like us to enable automatic archiving of old
-                    messages?
-                </p>
+                <h3>Github repository</h3>
+                <p>https://juldarod.github.com/opensub2vec</p>
             </Modal.Content>
         </Modal>
     );
