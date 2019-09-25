@@ -62,6 +62,7 @@ const calclWmdistances = async (source, target) => {
 
 export default class Translation extends Component {
     state = {
+        buttonLoading: false,
         visible: true,
         wmvisible: false,
         tmpEnInput: '',
@@ -86,6 +87,7 @@ export default class Translation extends Component {
     };
 
     onPlayClick = async () => {
+        await this.setState({ buttonLoading: true });
         const phrases_en = await axios
             .get(`http://localhost:5000/phraser/en/${this.state.tmpEnInput}`)
             .then(res => {
@@ -131,6 +133,7 @@ export default class Translation extends Component {
         );
         await this.setState({ wmdistances });
         await this.setState({ wmvisible: true });
+        await this.setState({ buttonLoading: false });
     };
 
     render() {
@@ -144,7 +147,11 @@ export default class Translation extends Component {
                                 onChange={e => this.onEnglishChange(e)}
                             >
                                 <input />
-                                <Button icon onClick={() => this.onPlayClick()}>
+                                <Button
+                                    loading={this.state.buttonLoading}
+                                    icon
+                                    onClick={() => this.onPlayClick()}
+                                >
                                     <Icon name="play" />
                                 </Button>
                             </Input>

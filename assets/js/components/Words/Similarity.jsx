@@ -19,6 +19,7 @@ import axios from 'axios';
 
 export default class Similarity extends Component {
     state = {
+        buttonLoading: false,
         tmpInput: '',
         input: '',
         toggle: true,
@@ -32,6 +33,7 @@ export default class Similarity extends Component {
     };
 
     onSearchClick = async () => {
+        await this.setState({ buttonLoading: true });
         await this.setState({ similars: [] });
         const lang = this.state.toggle ? 'english' : 'spanish';
         const phrases = await axios
@@ -53,6 +55,7 @@ export default class Similarity extends Component {
             });
         await this.setState({ visible: false });
         await this.setState({ visible: true });
+        await this.setState({ buttonLoading: false });
     };
 
     onCheckboxChange = async () => {
@@ -74,7 +77,11 @@ export default class Similarity extends Component {
                             onChange={e => this.onSearchChange(e)}
                         >
                             <input />
-                            <Button icon onClick={() => this.onSearchClick()}>
+                            <Button
+                                loading={this.state.buttonLoading}
+                                icon
+                                onClick={() => this.onSearchClick()}
+                            >
                                 <Icon name="play" />
                             </Button>
                             <Checkbox
