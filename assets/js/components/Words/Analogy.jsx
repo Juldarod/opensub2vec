@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 
 import blankPicture from '../../../static/blankpicture.png';
-import blankParagraph from '../../../static/blankParagraph.png';
+import blankParagraph from '../../../static/blankparagraph.png';
 
 export default class Analogy extends Component {
     state = {
