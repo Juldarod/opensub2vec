@@ -112,7 +112,5 @@ opensub2vec/resources/*
 # Javascript
 
 node_modules
-yarn.lock
-.prettierrc
 
 .directory

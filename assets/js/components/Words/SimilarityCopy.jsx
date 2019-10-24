@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
     Transition,
     Segment,
@@ -11,91 +11,91 @@ import {
     Header,
     Checkbox,
 } from 'semantic-ui-react';
-import axios from 'axios';
 
 import blankPicture from '../../../static/blankpicture.png';
 import blankParagraph from '../../../static/blankParagraph.png';
 import blankShortParagraph from '../../../static/blankShortParagraph.png';
+import axios from 'axios';
 
-const Similarity = () => {
-    const [tmpInput, setTmpInput] = useState('');
-    const [input, setInput] = useState('');
-    const [similars, setSimilars] = useState([]);
-    const [toggle, setToggle] = useState(true);
-    const [buttonLoading, setButtonLoading] = useState(false);
-    const [visible, setVisible] = useState(true);
+export default class Similarity extends Component {
+    state = {
+        buttonLoading: false,
+        tmpInput: '',
+        input: '',
+        toggle: true,
+        visible: true,
+        lang: 'English',
+        similars: [],
+    };
 
-    const onSearchClick = async () => {
-        setButtonLoading(true);
-        setSimilars([]);
-        const lang = toggle ? 'english' : 'spanish';
+    onSearchChange = e => {
+        this.setState({ tmpInput: e.target.value });
+    };
 
+    onSearchClick = async () => {
+        this.setState({ buttonLoading: true });
+        this.setState({ similars: [] });
+        const lang = this.state.toggle ? 'english' : 'spanish';
         const phrases = await axios
-            .get(`http://localhost:5000/phraser/${lang}/${tmpInput}`)
-            .then(res => res.data.phrases);
+            .get(`http://localhost:5000/phraser/${lang}/${this.state.tmpInput}`)
+            .then(res => {
+                return res.data.phrases;
+            });
+        this.setState({ input: phrases });
 
-        axios
+        await axios
             .get(
                 `http://localhost:5000/mostsimilar/${
-                toggle ? 'en' : 'es'
-                }/${phrases}`
+                this.state.toggle ? 'en' : 'es'
+                }/${this.state.input}`
             )
-            .then(res => {
-                setSimilars(res.data.result)
+            .then(async res => {
+                // console.log(res.data.result);
+                await this.setState({ similars: res.data.result });
             });
-
-        setInput(phrases);
-
-        // axios.get(`http://localhost:5000/plot/${
-        //     toggle ? 'en' : 'es'
-        //     }/${
-        //     input
-        //     } ${similars
-        //         .map(el => el[0])
-        //         .join(' ')}`).then(res => console.log(res)
-        //         )
+        this.setState({ visible: false });
+        this.setState({ visible: true });
+        this.setState({ buttonLoading: false });
     };
 
-    const onCheckboxChange = () => {
-        setToggle(prevState => !prevState)
-        setSimilars([])
+    onCheckboxChange = async () => {
+        this.setState(prevState => {
+            return { toggle: !prevState.toggle };
+        });
+        this.setState({ similars: [] });
     };
 
-    return (
-        <Segment>
-            <Grid columns={2} relaxed="very">
-                <Grid.Column verticalAlign="middle">
-                    <Input
-                        placeholder={
-                            toggle ? 'English' : 'Spanish'
-                        }
-                        onChange={e => setTmpInput(`${e.target.value}`)}
-                    >
-                        <input />
-                        <Button
-                            loading={buttonLoading}
-                            icon
-                            onClick={async () => {
-                                await onSearchClick();
-                                setVisible(false);
-                                setButtonLoading(false);
-                                setVisible(true);
-                            }}
+    render() {
+        return (
+            <Segment>
+                <Grid columns={2} relaxed="very">
+                    <Grid.Column verticalAlign="middle">
+                        <Input
+                            placeholder={
+                                this.state.toggle ? 'English' : 'Spanish'
+                            }
+                            onChange={e => this.onSearchChange(e)}
                         >
-                            <Icon name="play" />
-                        </Button>
-                        <Checkbox
-                            toggle
-                            onChange={() => onCheckboxChange()}
-                        />
-                    </Input>
-                    <Transition
-                        visible={visible}
-                        animation="horizontal flip"
-                        duration={500}
-                    >
+                            <input />
+                            <Button
+                                loading={this.state.buttonLoading}
+                                icon
+                                onClick={() => this.onSearchClick()}
+                            >
+                                <Icon name="play" />
+                            </Button>
+                            <Checkbox
+                                toggle
+                                onChange={() => this.onCheckboxChange()}
+                            />
+                        </Input>
+                        {/* <Transition
+                            visible={this.state.visible}
+                            animation="horizontal flip"
+                            duration={500}
+                        > */}
                         <Segment>
-                            {similars.length == 0 ? (
+                            {this.state.similars.length == 0 ? (
                                 <p>
                                     <Image src={blankPicture} />
                                 </p>
@@ -103,26 +103,26 @@ const Similarity = () => {
                                     <p>
                                         <Image
                                             src={`http://localhost:5000/plot/${
-                                                toggle ? 'en' : 'es'
+                                                this.state.toggle ? 'en' : 'es'
                                                 }/${
-                                                input
-                                                } ${similars
+                                                this.state.input
+                                                } ${this.state.similars
                                                     .map(el => el[0])
                                                     .join(' ')}`}
                                         />
                                     </p>
                                 )}
                         </Segment>
-                    </Transition>
-                </Grid.Column>
-                <Grid.Column verticalAlign="middle">
-                    <Transition
-                        visible={visible}
-                        animation="horizontal flip"
-                        duration={500}
-                    >
+                        {/* </Transition> */}
+                    </Grid.Column>
+                    <Grid.Column verticalAlign="middle">
+                        {/* <Transition
+                            visible={this.state.visible}
+                            animation="horizontal flip"
+                            duration={500}
+                        > */}
                         <Segment>
-                            {similars.length == 0 ? (
+                            {this.state.similars.length == 0 ? (
                                 <Fragment>
                                     <p>
                                         <Image src={blankShortParagraph} />
@@ -147,7 +147,7 @@ const Similarity = () => {
                                             </Table.Row>
                                         </Table.Header>
                                         <Table.Body>
-                                            {similars.map(el => (
+                                            {this.state.similars.map(el => (
                                                 <Table.Row key={el[0]}>
                                                     <Table.Cell>
                                                         <Header as="h4" image>
@@ -163,11 +163,10 @@ const Similarity = () => {
                                     </Table>
                                 )}
                         </Segment>
-                    </Transition>
-                </Grid.Column>
-            </Grid>
-        </Segment>
-    );
+                        {/* </Transition> */}
+                    </Grid.Column>
+                </Grid>
+            </Segment>
+        );
+    }
 }
-
-export default Similarity;
