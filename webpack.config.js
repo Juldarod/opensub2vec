@@ -4,11 +4,12 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
+    mode: 'development',
     entry: './assets/js/app.js',
-    output: {
-        path: path.join(__dirname, '/dist'),
-        filename: 'app.js',
-    },
+    // output: {
+    //     path: path.join(__dirname, '/dist'),
+    //     filename: 'app.js',
+    // },
     module: {
         rules: [
             {
@@ -22,25 +23,35 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'static/',
-                            useRelativePath: true,
-                        },
-                    },
-                ],
+                // options: {
+                //     name: '[name].[ext]',
+                //     outputPath: 'static/',
+                //     useRelativePath: true,
+                // },
+                type: 'asset/resource',
+                generator: { filename: 'static/[name].[ext]' },
+                // use: [
+                //     {
+                //         loader: 'file-loader',
+                //         options: {
+                //             name: '[name].[ext]',
+                //             outputPath: 'static/',
+                //             useRelativePath: true,
+                //         },
+                //     },
+                // ],
             },
             {
                 test: /\.ico$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: { name: '[name].[ext]' },
-                    },
-                ],
+                // options: { name: '[name].[ext]' },
+                type: 'asset/resource',
+                generator: { filename: '[name].[ext]' },
+                // use: [
+                //     {
+                //         loader: 'file-loader',
+                //         options: { name: '[name].[ext]' },
+                //     },
+                // ],
             },
         ],
     },

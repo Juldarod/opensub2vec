@@ -16,7 +16,6 @@ import axios from 'axios';
 import blankPicture from '../../../static/blankpicture.png';
 import blankParagraph from '../../../static/blankparagraph.png';
 import blankShortParagraph from '../../../static/blankshortparagraph.png';
-import axios from 'axios';
 
 const Similarity = () => {
     const [tmpInput, setTmpInput] = useState('');
