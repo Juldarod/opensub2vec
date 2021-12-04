@@ -17,9 +17,6 @@ const DashboardContent = ({ panes }) => {
                         <Contact trigger={<Menu.Item name="Contact" />} />
                     </Menu.Menu>
                 </Menu>
-            </Container>
-
-            <Container>
                 <Tab
                     id="tabs"
                     menu={{

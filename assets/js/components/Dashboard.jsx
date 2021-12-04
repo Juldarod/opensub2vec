@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import DashboardLoader from './DashboardLoader.jsx';
 import DashboardContent from './DashboardContent.jsx';
@@ -16,30 +17,25 @@ const panes = [
     },
 ];
 
-class Dashboard extends Component {
-    state = {
-        modelLoaded: false,
-    };
+const Dashboard = () => {
+    const { model } = useParams();
+    const [isModelLoaded, setIsModelLoaded] = useState(false);
 
-    componentDidMount() {
-        const { model } = this.props.match.params;
+    // useEffect(() => {
+    //     axios
+    //         .get(`http://localhost:5000/model/load/${model}`)
+    //         .then((response) => {
+    //             console.log(response);
+    //             setIsModelLoaded(true);
+    //         })
+    //         .catch((error) => console.log(error.response));
+    // }, []);
 
-        axios
-            .get(`http://localhost:5000/model/load/${model}`)
-            .then(response => {
-                console.log(response);
-                this.setState({ modelLoaded: true });
-            })
-            .catch(error => console.log(error.response));
-    }
-
-    render() {
-        return this.state.modelLoaded ? (
-            <DashboardContent panes={panes} />
-        ) : (
-            <DashboardLoader />
-        );
-    }
-}
+    return /* isModelLoaded */true ? (
+        <DashboardContent panes={panes} />
+    ) : (
+        <DashboardLoader />
+    );
+};
 
 export default Dashboard;

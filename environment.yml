@@ -13,3 +13,4 @@ dependencies:
     - pyemd
     - flask
     - flask-cors
+    - python-levenshtein

@@ -107,7 +107,7 @@ venv.bak/
 .vscode
 
 # corpus large files
-opensub2vec/resources/*
+opensub2vec/resources
 
 # Javascript
 
